@@ -1,10 +1,10 @@
-name := "hello-longevity"
+name := "simple-blogging"
 
 version := "0.0-SNAPSHOT"
 
 scalaVersion := "2.11.7"
 
-mainClass in Compile := Some("HelloLongevity")
+mainClass in Compile := Some("SimpleBlogging")
 
 libraryDependencies ++= Seq(
   "org.longevityframework" %% "longevity" % "0.8.0",
