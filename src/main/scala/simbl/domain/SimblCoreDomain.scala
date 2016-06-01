@@ -7,6 +7,6 @@ import longevity.subdomain.ptype.PTypePool
 
 class SimblCoreDomain extends CoreDomain(
   "Simple Blogging",
-  PTypePool.empty,
-  EntityTypePool.empty,
+  PTypePool(User, Blog, BlogPost),
+  EntityTypePool(UserProfile),
   ShorthandPool(Email, Markdown, Uri))
