@@ -1,4 +1,4 @@
-package simpleblogging.domain
+package simbl.domain
 
 import longevity.subdomain.CoreDomain
 import longevity.subdomain.ShorthandPool
