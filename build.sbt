@@ -4,7 +4,7 @@ version := "0.0-SNAPSHOT"
 
 scalaVersion := "2.11.7"
 
-mainClass in Compile := Some("SimpleBlogging")
+mainClass in Compile := Some("WebServer")
 
 libraryDependencies ++= {
   val akkaVersion = "2.4.6"
