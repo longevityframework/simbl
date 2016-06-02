@@ -1,3 +1,4 @@
+package simbl.api
 
 import akka.Done
 import akka.actor.ActorSystem
