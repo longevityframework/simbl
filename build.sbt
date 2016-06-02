@@ -22,3 +22,6 @@ libraryDependencies ++= {
     "org.scalatest" %% "scalatest" % scalaTestVersion % Test
   )
 }
+
+
+fork in run := true

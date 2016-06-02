@@ -1,1 +1,5 @@
 target
+/project/.sbtserver
+/project/.sbtserver.lock
+/.sbtserver
+/project/sbt-ui.sbt
