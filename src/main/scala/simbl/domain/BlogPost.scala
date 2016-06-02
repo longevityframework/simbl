@@ -18,17 +18,21 @@ case class BlogPost(
 extends Root
 
 object BlogPost extends RootType[BlogPost] {
+
   object props {
     val blog = prop[Assoc[Blog]]("blog")
     val uriPathSuffix = prop[String]("uriPathSuffix")
     val postDate = prop[DateTime]("postDate")
   }
+
   object keys {
     val uri = key(props.blog, props.uriPathSuffix)
   }
+
   object indexes {
     val postDate = index(props.blog, props.postDate)
   }
+
   object queries {
     import com.github.nscala_time.time.Implicits._
     import BlogPost.queryDsl._
@@ -36,4 +40,5 @@ object BlogPost extends RootType[BlogPost] {
     def recentPosts(blogAssoc: Assoc[Blog]): Query[BlogPost] =
       blog eqs blogAssoc and postDate gt DateTime.now - 1.week
   }
+
 }
