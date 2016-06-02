@@ -6,10 +6,19 @@ scalaVersion := "2.11.7"
 
 mainClass in Compile := Some("SimpleBlogging")
 
-libraryDependencies ++= Seq(
-  "org.longevityframework" %% "longevity" % "0.9-SNAPSHOT",
-  "org.longevityframework" %% "longevity-cassandra-deps" % "0.9-SNAPSHOT",
-  "org.longevityframework" %% "longevity-mongo-deps" % "0.9-SNAPSHOT",
-  "com.github.nscala-time" %% "nscala-time" % "2.10.0",
-  "org.scalatest" %% "scalatest" % "2.2.6" % "test"
-)
+libraryDependencies ++= {
+  val akkaVersion = "2.4.6"
+  val longevityVersion = "0.9-SNAPSHOT"
+  val scalaTestVersion = "2.2.6"
+  val scalaTimeVersion = "2.10.0"
+  Seq(
+    "com.github.nscala-time" %% "nscala-time" % scalaTimeVersion,
+    "com.typesafe.akka" %% "akka-http-core" % akkaVersion,
+    "com.typesafe.akka" %% "akka-http-experimental" % akkaVersion,
+    "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaVersion,
+    "org.longevityframework" %% "longevity" % longevityVersion,
+    "org.longevityframework" %% "longevity-cassandra-deps" % longevityVersion,
+    "org.longevityframework" %% "longevity-mongo-deps" % longevityVersion,
+    "org.scalatest" %% "scalatest" % scalaTestVersion % Test
+  )
+}
