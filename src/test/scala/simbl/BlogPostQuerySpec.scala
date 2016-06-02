@@ -8,7 +8,7 @@ class BlogPostQuerySpec extends QuerySpec[BlogPost](
   TestSimblContext.longevityContext,
   TestSimblContext.longevityContext.testRepoPool) {
 
-  val sample = randomP
+  lazy val sample = randomP
 
   behavior of "BlogPost.queries.recentPosts"
   it should "produce the expected results" in {
