@@ -26,8 +26,10 @@ class UserApi(
         }
       } ~
       get {
-        path(Segment) {
-          username => complete(retrieveUser(username))
+        rejectEmptyResponse {
+          path(Segment) {
+            username => complete(retrieveUser(username))
+          }
         }
       }
     }
@@ -37,7 +39,6 @@ class UserApi(
     userRepo.create(basics.toUser).map(_.get).map(UserBasics(_))
   }
  
-  // TODO: None should cause NotFound response (right now it makes empty response)
   def retrieveUser(username: String): Future[Option[UserBasics]] = {
     val keyVal = User.keys.username(username)
     def stateToBasics(state: PState[User]) = UserBasics(state.get)
