@@ -1,12 +1,13 @@
 package simbl
 
+import akka.actor.ActorSystem
 import longevity.context.LongevityContext
 import longevity.context.Mongo
+import simbl.api.UserApi
 import simbl.domain.Blog
 import simbl.domain.BlogPost
 import simbl.domain.SimblCoreDomain
 import simbl.domain.User
-import simbl.api.UserApi
 
 /** default container for all the Simble application components */
 class SimblContextImpl extends SimblContext {
@@ -17,5 +18,9 @@ class SimblContextImpl extends SimblContext {
   val blogRepo = repoPool[Blog]
   val blogPostRepo = repoPool[BlogPost]
   val userRepo = repoPool[User]
+
+  val actorSystem = ActorSystem("SimpleBlogging")
+  implicit val context = actorSystem.dispatcher
+
   val userApi = new UserApi(userRepo)
 }

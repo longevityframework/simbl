@@ -3,3 +3,4 @@ target
 /project/.sbtserver.lock
 /.sbtserver
 /project/sbt-ui.sbt
+/TAGS

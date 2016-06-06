@@ -7,10 +7,13 @@ import longevity.persistence.PState
 import longevity.persistence.Repo
 import org.json4s.DefaultFormats
 import org.json4s.native.Serialization
+import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import simbl.domain.User
 
-class UserApi(private val userRepo: Repo[User]) {
+class UserApi(
+  private val userRepo: Repo[User])(
+  implicit context: ExecutionContext){
 
   implicit val serialization = Serialization
   implicit val formats = DefaultFormats
@@ -28,8 +31,6 @@ class UserApi(private val userRepo: Repo[User]) {
         }
       }
     }
-
-  import scala.concurrent.ExecutionContext.Implicits.global // TODO get from actor sys
 
   // TODO: handle duplicate key
   def createUser(basics: UserBasics): Future[UserBasics] = {
