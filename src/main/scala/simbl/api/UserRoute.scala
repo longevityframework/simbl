@@ -15,14 +15,25 @@ class UserRoute(
   val route: Route =
     pathPrefix("users") {
       post {
-        entity(as[UserBasics]) {
-          basics => complete(userApi.createUser(basics))
+        entity(as[UserInfo]) {
+          info => complete(userApi.createUser(info))
         }
       } ~
       get {
         rejectEmptyResponse {
           path(Segment) {
             username => complete(userApi.retrieveUser(username))
+          }
+        }
+      } ~
+      put {
+        rejectEmptyResponse {
+          path(Segment) {
+            username =>
+            entity(as[UserInfo]) {
+              info =>
+              complete(userApi.updateUser(username, info))
+            }
           }
         }
       }

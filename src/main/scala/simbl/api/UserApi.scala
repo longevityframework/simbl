@@ -2,24 +2,63 @@ package simbl.api
 
 import longevity.persistence.PState
 import longevity.persistence.Repo
+import longevity.subdomain.ptype.KeyVal
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import simbl.domain.User
 
+/** API service methods that back the [[UserRoute user routes]] */
 class UserApi(
   private val userRepo: Repo[User])(
   implicit context: ExecutionContext){
 
-  // TODO: handle duplicate key
-  def createUser(basics: UserBasics): Future[UserBasics] = {
-    userRepo.create(basics.toUser).map(_.get).map(UserBasics(_))
+  /** creates and persists a new [[User]] from the [[UserInfo]], returning a
+   * `UserInfo` reflecting the persisted `User`.
+   */
+  def createUser(info: UserInfo): Future[UserInfo] = {
+    for {
+      created <- userRepo.create(info.toUser)
+    } yield {
+      stateToInfo(created)
+    }
   }
- 
-  def retrieveUser(username: String): Future[Option[UserBasics]] = {
-    val keyVal = User.keys.username(username)
-    def stateToBasics(state: PState[User]) = UserBasics(state.get)
-    def stateOptToBasicsOpt(stateOpt: Option[PState[User]]) = stateOpt.map(stateToBasics)
-    userRepo.retrieve(keyVal).map(stateOptToBasicsOpt)
+
+  /** retrieves a [[User]] by username, returning a [[UserInfo]] reflecting the
+   * persisted `User`. returns `None` if no such user by that username.
+   */
+  def retrieveUser(username: String): Future[Option[UserInfo]] = {
+    for {
+      retrieved <- userRepo.retrieve(keyVal(username))
+    } yield {
+      retrieved.map(stateToInfo)
+    }
   }
+
+  /** updates a [[User]] by username, returning a [[UserInfo]] reflecting the
+   * persisted `User`. returns `None` if no such user by that username.
+   */
+  def updateUser(username: String, info: UserInfo): Future[Option[UserInfo]] = {
+    {
+      for {
+        retrieved <- userRepo.retrieveOne(keyVal(username))
+        modified = retrieved.map(info.mapUser)
+        updated <- userRepo.update(modified)
+      } yield {
+        Some(stateToInfo(updated))
+      }
+    } recover {
+      case e: NoSuchElementException => None
+    }
+  }
+
+  // TODO
+  // - DeleteUser(username: String): UserBasics
+  //   - DELETE /users/username
+
+  /** produces a key value for looking up a user by username */
+  private def keyVal(username: String): KeyVal[User] = User.keys.username(username)
+
+  /** translates from a user persistent state to a `UserInfo` */
+  private def stateToInfo(state: PState[User]): UserInfo = UserInfo(state.get)
 
 }
