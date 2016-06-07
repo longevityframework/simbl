@@ -3,6 +3,7 @@ package simbl
 import akka.actor.ActorSystem
 import longevity.persistence.Repo
 import simbl.api.UserApi
+import simbl.api.UserRoute
 import simbl.domain.Blog
 import simbl.domain.BlogPost
 import simbl.domain.User
@@ -14,4 +15,5 @@ trait SimblContext {
   val blogPostRepo: Repo[BlogPost]
   val userRepo: Repo[User]
   val userApi: UserApi
+  val userRoute: UserRoute
 }

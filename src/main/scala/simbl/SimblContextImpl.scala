@@ -4,6 +4,7 @@ import akka.actor.ActorSystem
 import longevity.context.LongevityContext
 import longevity.context.Mongo
 import simbl.api.UserApi
+import simbl.api.UserRoute
 import simbl.domain.Blog
 import simbl.domain.BlogPost
 import simbl.domain.SimblCoreDomain
@@ -23,4 +24,5 @@ class SimblContextImpl extends SimblContext {
   implicit val context = actorSystem.dispatcher
 
   val userApi = new UserApi(userRepo)
+  val userRoute = new UserRoute(userApi)
 }

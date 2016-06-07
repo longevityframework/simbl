@@ -6,16 +6,15 @@ import akka.stream.ActorMaterializer
 import simbl.SimblContext
 import simbl.SimblContextImpl
 
+/** the main program that runs the Simple Blogging web server */
 object WebServer extends App {
-
-  println("hi from Webserver " + new java.util.Date())
 
   val context: SimblContext = new SimblContextImpl
 
   implicit val system = context.actorSystem
   implicit val materializer = ActorMaterializer()
 
-  val route: Route = context.userApi.route
+  val route: Route = context.userRoute.route
 
   val host = system.settings.config.getString("http.host")
   val port = system.settings.config.getInt("http.port")
