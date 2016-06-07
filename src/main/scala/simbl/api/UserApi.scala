@@ -19,7 +19,7 @@ class UserApi(
     for {
       created <- userRepo.create(info.toUser)
     } yield {
-      stateToInfo(created)
+      UserInfo(created.get)
     }
   }
 
@@ -30,6 +30,7 @@ class UserApi(
     for {
       retrieved <- userRepo.retrieve(keyVal(username))
     } yield {
+      def stateToInfo(state: PState[User]) = UserInfo(state.get)
       retrieved.map(stateToInfo)
     }
   }
@@ -44,21 +45,27 @@ class UserApi(
         modified = retrieved.map(info.mapUser)
         updated <- userRepo.update(modified)
       } yield {
-        Some(stateToInfo(updated))
+        Some(UserInfo(updated.get))
       }
     } recover {
       case e: NoSuchElementException => None
     }
   }
 
-  // TODO
-  // - DeleteUser(username: String): UserBasics
-  //   - DELETE /users/username
+  def deleteUser(username: String): Future[Option[UserInfo]] = {
+    {
+      for {
+        retrieved <- userRepo.retrieveOne(keyVal(username))
+        deleted <- userRepo.delete(retrieved)
+      } yield {
+        Some(UserInfo(deleted.get))
+      }
+    } recover {
+      case e: NoSuchElementException => None
+    }
+  }
 
   /** produces a key value for looking up a user by username */
   private def keyVal(username: String): KeyVal[User] = User.keys.username(username)
-
-  /** translates from a user persistent state to a `UserInfo` */
-  private def stateToInfo(state: PState[User]): UserInfo = UserInfo(state.get)
 
 }

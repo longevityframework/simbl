@@ -19,21 +19,27 @@ class UserRoute(
           info => complete(userApi.createUser(info))
         }
       } ~
+      // TODO rm redunancies below
       get {
-        rejectEmptyResponse {
-          path(Segment) {
-            username => complete(userApi.retrieveUser(username))
+        path(Segment) { username =>
+          rejectEmptyResponse {
+            complete(userApi.retrieveUser(username))
           }
         }
       } ~
       put {
-        rejectEmptyResponse {
-          path(Segment) {
-            username =>
-            entity(as[UserInfo]) {
-              info =>
+        path(Segment) { username =>
+          rejectEmptyResponse {
+            entity(as[UserInfo]) { info =>
               complete(userApi.updateUser(username, info))
             }
+          }
+        }
+      } ~
+      delete {
+        path(Segment) { username =>
+          rejectEmptyResponse {
+            complete(userApi.deleteUser(username))
           }
         }
       }
