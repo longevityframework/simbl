@@ -8,7 +8,13 @@ case class User(
   username: String,
   fullname: String,
   profile: Option[UserProfile])
-extends Root
+extends Root {
+
+  def updateProfile(profile: UserProfile): User = copy(profile = Some(profile))
+
+  def deleteProfile: User = copy(profile = None)
+
+}
 
 object User extends RootType[User] {
   object props {

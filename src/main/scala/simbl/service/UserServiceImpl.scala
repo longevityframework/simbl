@@ -17,8 +17,6 @@ class UserServiceImpl(
 extends UserService {
 
   def createUser(info: UserInfo): Future[UserInfo] = {
-    // TODO: in the route, handle the local exceptions
-
     {
       for {
         created <- userRepo.create(info.toUser)
@@ -84,7 +82,7 @@ extends UserService {
     {
       for {
         retrieved <- userRepo.retrieveOne(keyVal(username))
-        modified = retrieved.map(_.copy(profile = Some(profile.toProfile))) // TODO clean this up
+        modified = retrieved.map(_.updateProfile(profile.toProfile))
         updated <- userRepo.update(modified)
       } yield {
         updated.get.profile.map(ProfileInfo(_))
@@ -98,7 +96,7 @@ extends UserService {
     {
       for {
         retrieved <- userRepo.retrieveOne(keyVal(username))
-        modified = retrieved.map(_.copy(profile = None)) // TODO clean this up (UserService)
+        modified = retrieved.map(_.deleteProfile)
         updated <- userRepo.update(modified)
       } yield {
         retrieved.get.profile.map(ProfileInfo(_))
