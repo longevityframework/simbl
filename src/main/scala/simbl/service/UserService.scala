@@ -9,6 +9,12 @@ trait UserService {
 
   /** creates and persists a new [[User]] from the [[UserInfo]], returning a
    * `UserInfo` reflecting the persisted `User`.
+   *
+   * @throws DuplicateUsernameException if a user with the supplied username
+   * already exists
+   * 
+   * @throws DuplicateEmailException if a user with the supplied email already
+   * exists
    */
   def createUser(info: UserInfo): Future[UserInfo]
 

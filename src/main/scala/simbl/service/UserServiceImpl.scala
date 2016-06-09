@@ -1,5 +1,6 @@
 package simbl.service
 
+import longevity.exceptions.persistence.DuplicateKeyValException
 import longevity.persistence.PState
 import longevity.persistence.Repo
 import longevity.subdomain.ptype.KeyVal
@@ -16,16 +17,24 @@ class UserServiceImpl(
 extends UserService {
 
   def createUser(info: UserInfo): Future[UserInfo] = {
-    // TODO: create local exception types DupEmail & DupUsername
-    // TODO: wrap this in a recover. catch DuplicateKeyValE, translate into local exception
     // TODO: in the route, handle the local exceptions
-    for {
-      created <- userRepo.create(info.toUser)
-    } yield {
-      UserInfo(created.get)
+
+    {
+      for {
+        created <- userRepo.create(info.toUser)
+      } yield {
+        UserInfo(created.get)
+      }
+    } recover {
+      case e: DuplicateKeyValException[_] => e.key match {
+        case User.keys.username =>
+          throw new DuplicateUsernameException(info.username)
+        case User.keys.email =>
+          throw new DuplicateEmailException(info.email)
+      }
     }
   }
-
+    
   def retrieveUser(username: String): Future[Option[UserInfo]] = {
     for {
       retrieved <- userRepo.retrieve(keyVal(username))

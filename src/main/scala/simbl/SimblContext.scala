@@ -16,6 +16,8 @@ trait SimblContext {
   val blogPostRepo: Repo[BlogPost]
   val userRepo: Repo[User]
 
+  // TODO +2 services and routes
+
   val userService: UserService
 
   val userRoute: UserRoute

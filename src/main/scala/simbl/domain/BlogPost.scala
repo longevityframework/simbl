@@ -7,7 +7,7 @@ import longevity.subdomain.ptype.RootType
 import org.joda.time.DateTime
 
 case class BlogPost(
-  uriPathSuffix: String,
+  uri: Uri,
   title: String,
   slug: Option[Markdown] = None,
   content: Markdown,
@@ -20,13 +20,13 @@ extends Root
 object BlogPost extends RootType[BlogPost] {
 
   object props {
+    val uri = prop[Uri]("uri")
     val blog = prop[Assoc[Blog]]("blog")
-    val uriPathSuffix = prop[String]("uriPathSuffix")
     val postDate = prop[DateTime]("postDate")
   }
 
   object keys {
-    val uri = key(props.blog, props.uriPathSuffix)
+    val uri = key(props.uri)
   }
 
   object indexes {
