@@ -22,7 +22,7 @@ scalacOptions ++= Seq(
   "-unchecked")
 
 libraryDependencies ++= {
-  val akkaVersion = "2.4.6"
+  val akkaVersion = "2.4.7"
   val longevityVersion = "0.9-SNAPSHOT"
   val scalaTestVersion = "2.2.6"
   val scalaTimeVersion = "2.10.0"
@@ -30,7 +30,6 @@ libraryDependencies ++= {
     "com.github.nscala-time" %% "nscala-time" % scalaTimeVersion,
     "com.typesafe.akka" %% "akka-http-core" % akkaVersion,
     "com.typesafe.akka" %% "akka-http-experimental" % akkaVersion,
-//    "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaVersion,
     "de.heikoseeberger" %% "akka-http-json4s" % "1.6.0",
     "org.longevityframework" %% "longevity" % longevityVersion,
     "org.longevityframework" %% "longevity-cassandra-deps" % longevityVersion,
