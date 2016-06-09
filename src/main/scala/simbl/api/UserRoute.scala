@@ -13,36 +13,45 @@ class UserRoute(
   implicit val formats = DefaultFormats
 
   val route: Route =
-    pathPrefix("users") {
-      post {
-        entity(as[UserInfo]) {
-          info => complete(userApi.createUser(info))
-        }
-      } ~
-      // TODO rm redunancies below
-      get {
-        path(Segment) { username =>
-          rejectEmptyResponse {
-            complete(userApi.retrieveUser(username))
-          }
-        }
-      } ~
-      put {
-        path(Segment) { username =>
-          rejectEmptyResponse {
-            entity(as[UserInfo]) { info =>
-              complete(userApi.updateUser(username, info))
+    rejectEmptyResponse {
+      pathPrefix("users") {
+        pathEndOrSingleSlash {
+          post {
+            entity(as[UserInfo]) {
+              info => complete(userApi.createUser(info))
             }
           }
-        }
-      } ~
-      delete {
-        path(Segment) { username =>
-          rejectEmptyResponse {
-            complete(userApi.deleteUser(username))
+        } ~
+        pathPrefix(Segment) { username =>
+          pathEndOrSingleSlash {
+            get {
+              complete(userApi.retrieveUser(username))
+            } ~
+            put {
+              entity(as[UserInfo]) { info =>
+                complete(userApi.updateUser(username, info))
+              }
+            } ~
+            delete {
+              complete(userApi.deleteUser(username))
+            }
+          } ~
+          path("profile") {
+            get {
+              complete(userApi.retrieveProfile(username))
+            } ~
+            put {
+              entity(as[ProfileInfo]) { info =>
+                complete(userApi.updateProfile(username, info))
+              }
+            } ~
+            delete {
+              complete(userApi.deleteProfile(username))
+            }
           }
         }
       }
     }
+
 
 }
