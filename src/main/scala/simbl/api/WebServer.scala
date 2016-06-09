@@ -1,6 +1,7 @@
 package simbl.api
 
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import simbl.SimblContext
@@ -14,7 +15,10 @@ object WebServer extends App {
   implicit val system = context.actorSystem
   implicit val materializer = ActorMaterializer()
 
-  val route: Route = context.userRoute.route
+  val route: Route =
+    context.blogRoute.route ~
+    context.blogPostRoute.route ~
+    context.userRoute.route
 
   val host = system.settings.config.getString("http.host")
   val port = system.settings.config.getInt("http.port")
