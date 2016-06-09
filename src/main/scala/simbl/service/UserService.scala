@@ -1,10 +1,12 @@
-package simbl.api
+package simbl.service
 
 import longevity.persistence.PState
 import longevity.persistence.Repo
 import longevity.subdomain.ptype.KeyVal
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+import simbl.api.ProfileInfo
+import simbl.api.UserInfo
 import simbl.domain.User
 
 /** service methods that back the [[UserRoute user routes]] */

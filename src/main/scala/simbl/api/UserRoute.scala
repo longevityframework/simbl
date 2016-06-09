@@ -5,7 +5,9 @@ import akka.http.scaladsl.server.Route
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 import org.json4s.DefaultFormats
 import org.json4s.native.Serialization
+import simbl.service.UserService
 
+/** defines the Akka HTTP routes for user endpoints */
 class UserRoute(
   private val userService: UserService) {
 
