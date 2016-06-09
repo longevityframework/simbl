@@ -8,7 +8,7 @@ import simbl.domain.Blog
 import simbl.domain.BlogPost
 import simbl.domain.SimblCoreDomain
 import simbl.domain.User
-import simbl.service.UserService
+import simbl.service.UserServiceImpl
 
 /** default container for all the Simble application components */
 class SimblContextImpl extends SimblContext {
@@ -23,6 +23,6 @@ class SimblContextImpl extends SimblContext {
   val actorSystem = ActorSystem("SimpleBlogging")
   implicit val context = actorSystem.dispatcher
 
-  val userService = new UserService(userRepo)
+  val userService = new UserServiceImpl(userRepo)
   val userRoute = new UserRoute(userService)
 }
