@@ -7,10 +7,10 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import simbl.domain.User
 
-/** API service methods that back the [[UserRoute user routes]] */
-class UserApi(
+/** service methods that back the [[UserRoute user routes]] */
+class UserService(
   private val userRepo: Repo[User])(
-  implicit context: ExecutionContext){
+  implicit context: ExecutionContext) {
 
   /** creates and persists a new [[User]] from the [[UserInfo]], returning a
    * `UserInfo` reflecting the persisted `User`.

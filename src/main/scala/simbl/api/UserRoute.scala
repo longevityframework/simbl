@@ -7,7 +7,7 @@ import org.json4s.DefaultFormats
 import org.json4s.native.Serialization
 
 class UserRoute(
-  private val userApi: UserApi) {
+  private val userService: UserService) {
 
   implicit val serialization = Serialization
   implicit val formats = DefaultFormats
@@ -18,35 +18,35 @@ class UserRoute(
         pathEndOrSingleSlash {
           post {
             entity(as[UserInfo]) {
-              info => complete(userApi.createUser(info))
+              info => complete(userService.createUser(info))
             }
           }
         } ~
         pathPrefix(Segment) { username =>
           pathEndOrSingleSlash {
             get {
-              complete(userApi.retrieveUser(username))
+              complete(userService.retrieveUser(username))
             } ~
             put {
               entity(as[UserInfo]) { info =>
-                complete(userApi.updateUser(username, info))
+                complete(userService.updateUser(username, info))
               }
             } ~
             delete {
-              complete(userApi.deleteUser(username))
+              complete(userService.deleteUser(username))
             }
           } ~
           path("profile") {
             get {
-              complete(userApi.retrieveProfile(username))
+              complete(userService.retrieveProfile(username))
             } ~
             put {
               entity(as[ProfileInfo]) { info =>
-                complete(userApi.updateProfile(username, info))
+                complete(userService.updateProfile(username, info))
               }
             } ~
             delete {
-              complete(userApi.deleteProfile(username))
+              complete(userService.deleteProfile(username))
             }
           }
         }

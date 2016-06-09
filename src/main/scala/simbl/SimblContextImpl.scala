@@ -3,7 +3,7 @@ package simbl
 import akka.actor.ActorSystem
 import longevity.context.LongevityContext
 import longevity.context.Mongo
-import simbl.api.UserApi
+import simbl.api.UserService
 import simbl.api.UserRoute
 import simbl.domain.Blog
 import simbl.domain.BlogPost
@@ -23,6 +23,6 @@ class SimblContextImpl extends SimblContext {
   val actorSystem = ActorSystem("SimpleBlogging")
   implicit val context = actorSystem.dispatcher
 
-  val userApi = new UserApi(userRepo)
-  val userRoute = new UserRoute(userApi)
+  val userService = new UserService(userRepo)
+  val userRoute = new UserRoute(userService)
 }
