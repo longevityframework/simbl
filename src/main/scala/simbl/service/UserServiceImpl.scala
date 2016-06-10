@@ -4,6 +4,7 @@ import longevity.exceptions.persistence.DuplicateKeyValException
 import longevity.persistence.PState
 import longevity.persistence.Repo
 import longevity.subdomain.ptype.KeyVal
+import longevity.subdomain.ptype.Query.All
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import simbl.api.ProfileInfo
@@ -24,15 +25,16 @@ extends UserService {
         UserInfo(created.get)
       }
     } recover {
-      case e: DuplicateKeyValException[_] => e.key match {
-        case User.keys.username =>
-          throw new DuplicateUsernameException(info.username)
-        case User.keys.email =>
-          throw new DuplicateEmailException(info.email)
-      }
+      case e: DuplicateKeyValException[_] => handleDuplicateKeyVal(e, info)
     }
   }
-    
+
+  def retrieveAllUsers(): Future[Seq[UserInfo]] = {
+    def stateToInfo(state: PState[User]) = UserInfo(state.get)
+    def usersToUserInfos(users: Seq[PState[User]]) = users.map(stateToInfo)
+    userRepo.retrieveByQuery(All()).map(usersToUserInfos)
+  }
+
   def retrieveUser(username: String): Future[Option[UserInfo]] = {
     for {
       retrieved <- userRepo.retrieve(keyVal(username))
@@ -52,6 +54,7 @@ extends UserService {
         Some(UserInfo(updated.get))
       }
     } recover {
+      case e: DuplicateKeyValException[_] => handleDuplicateKeyVal(e, info)
       case e: NoSuchElementException => None
     }
   }
@@ -108,5 +111,15 @@ extends UserService {
 
   /** produces a key value for looking up a user by username */
   private def keyVal(username: String): KeyVal[User] = User.keys.username(username)
+
+  /** converts longevity duplicate key val exception into simbl exception */
+  private def handleDuplicateKeyVal(e: DuplicateKeyValException[_], info: UserInfo): Nothing = {
+    e.key match {
+      case User.keys.username =>
+        throw new DuplicateUsernameException(info.username)
+      case User.keys.email =>
+        throw new DuplicateEmailException(info.email)
+    }
+  }
 
 }

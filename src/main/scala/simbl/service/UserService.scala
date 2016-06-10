@@ -18,6 +18,9 @@ trait UserService {
    */
   def createUser(info: UserInfo): Future[UserInfo]
 
+  /** retrieves a list of all the users in the system */
+  def retrieveAllUsers(): Future[Seq[UserInfo]]
+
   /** retrieves a [[User]] by username, returning a [[UserInfo]] reflecting the
    * persisted `User`. returns `None` if no such user by that username.
    */

@@ -36,6 +36,9 @@ class UserRoute(
                   failWith(e)
               }
             }
+          } ~
+          get {
+            complete(userService.retrieveAllUsers())
           }
         } ~
         pathPrefix(Segment) { username =>
@@ -45,7 +48,16 @@ class UserRoute(
             } ~
             put {
               entity(as[UserInfo]) { info =>
-                complete(userService.updateUser(username, info))
+                onComplete(userService.updateUser(username, info)) {
+                  case Success(info) =>
+                    complete(info)
+                  case Failure(e: DuplicateUsernameException) =>
+                    complete(StatusCodes.Conflict -> e.getMessage)
+                  case Failure(e: DuplicateEmailException) =>
+                    complete(StatusCodes.Conflict -> e.getMessage)
+                  case Failure(e) =>
+                    failWith(e)
+                }
               }
             } ~
             delete {
