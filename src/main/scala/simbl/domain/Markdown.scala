@@ -1,7 +1,8 @@
 package simbl.domain
 
-import longevity.subdomain.Shorthand
+import longevity.subdomain.embeddable.ValueObject
+import longevity.subdomain.embeddable.ValueType
 
-case class Markdown(markdown: String)
+case class Markdown(markdown: String) extends ValueObject
 
-object Markdown extends Shorthand[Markdown, String]
+object Markdown extends ValueType[Markdown]

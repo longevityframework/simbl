@@ -1,7 +1,7 @@
 package simbl.domain
 
-import longevity.subdomain.entity.Entity
-import longevity.subdomain.entity.EntityType
+import longevity.subdomain.embeddable.Entity
+import longevity.subdomain.embeddable.EntityType
 
 case class UserProfile(
   tagline: String,

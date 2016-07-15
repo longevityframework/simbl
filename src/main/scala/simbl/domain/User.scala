@@ -4,8 +4,8 @@ import longevity.subdomain.persistent.Root
 import longevity.subdomain.ptype.RootType
 
 case class User(
+  username: Username,
   email: Email,
-  username: String,
   fullname: String,
   profile: Option[UserProfile])
 extends Root {
@@ -18,7 +18,7 @@ extends Root {
 
 object User extends RootType[User] {
   object props {
-    val username = prop[String]("username")
+    val username = prop[Username]("username")
     val email = prop[Email]("email")
   }
   object keys {

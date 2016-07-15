@@ -1,7 +1,6 @@
 package simbl.domain
 
-import longevity.subdomain.Shorthand
+import longevity.subdomain.KeyVal
 
 case class Email(email: String)
-
-object Email extends Shorthand[Email, String]
+extends KeyVal[User, Email](User.keys.email)

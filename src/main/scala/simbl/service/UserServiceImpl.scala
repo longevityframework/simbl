@@ -3,13 +3,13 @@ package simbl.service
 import longevity.exceptions.persistence.DuplicateKeyValException
 import longevity.persistence.PState
 import longevity.persistence.Repo
-import longevity.subdomain.ptype.KeyVal
 import longevity.subdomain.ptype.Query.All
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import simbl.api.ProfileInfo
 import simbl.api.UserInfo
 import simbl.domain.User
+import simbl.domain.Username
 
 /** default implementation of service to back the [[UserRoute user routes]] */
 class UserServiceImpl(
@@ -37,7 +37,7 @@ extends UserService {
 
   def retrieveUser(username: String): Future[Option[UserInfo]] = {
     for {
-      retrieved <- userRepo.retrieve(keyVal(username))
+      retrieved <- userRepo.retrieve(Username(username))
     } yield {
       def stateToInfo(state: PState[User]) = UserInfo(state.get)
       retrieved.map(stateToInfo)
@@ -47,7 +47,7 @@ extends UserService {
   def updateUser(username: String, info: UserInfo): Future[Option[UserInfo]] = {
     {
       for {
-        retrieved <- userRepo.retrieveOne(keyVal(username))
+        retrieved <- userRepo.retrieveOne(Username(username))
         modified = retrieved.map(info.mapUser)
         updated <- userRepo.update(modified)
       } yield {
@@ -62,7 +62,7 @@ extends UserService {
   def deleteUser(username: String): Future[Option[UserInfo]] = {
     {
       for {
-        retrieved <- userRepo.retrieveOne(keyVal(username))
+        retrieved <- userRepo.retrieveOne(Username(username))
         deleted <- userRepo.delete(retrieved)
       } yield {
         Some(UserInfo(deleted.get))
@@ -74,7 +74,7 @@ extends UserService {
 
   def retrieveProfile(username: String): Future[Option[ProfileInfo]] = {
     for {
-      retrieved <- userRepo.retrieve(keyVal(username))
+      retrieved <- userRepo.retrieve(Username(username))
     } yield {
       def stateToInfo(state: PState[User]) = state.get.profile.map(ProfileInfo(_))
       retrieved.flatMap(stateToInfo)
@@ -84,7 +84,7 @@ extends UserService {
   def updateProfile(username: String, profile: ProfileInfo): Future[Option[ProfileInfo]] = {
     {
       for {
-        retrieved <- userRepo.retrieveOne(keyVal(username))
+        retrieved <- userRepo.retrieveOne(Username(username))
         modified = retrieved.map(_.updateProfile(profile.toProfile))
         updated <- userRepo.update(modified)
       } yield {
@@ -98,7 +98,7 @@ extends UserService {
   def deleteProfile(username: String): Future[Option[ProfileInfo]] = {
     {
       for {
-        retrieved <- userRepo.retrieveOne(keyVal(username))
+        retrieved <- userRepo.retrieveOne(Username(username))
         modified = retrieved.map(_.deleteProfile)
         updated <- userRepo.update(modified)
       } yield {
@@ -108,9 +108,6 @@ extends UserService {
       case e: NoSuchElementException => None
     }
   }
-
-  /** produces a key value for looking up a user by username */
-  private def keyVal(username: String): KeyVal[User] = User.keys.username(username)
 
   /** converts longevity duplicate key val exception into simbl exception */
   private def handleDuplicateKeyVal(e: DuplicateKeyValException[_], info: UserInfo): Nothing = {

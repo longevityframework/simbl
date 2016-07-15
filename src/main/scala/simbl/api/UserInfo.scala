@@ -2,17 +2,18 @@ package simbl.api
 
 import simbl.domain.Email
 import simbl.domain.User
+import simbl.domain.Username
 
 case class UserInfo(
-  email: String,
   username: String,
+  email: String,
   fullname: String) {
 
-  def toUser = User(Email(email), username, fullname, None)
+  def toUser = User(Username(username), Email(email), fullname, None)
 
   def mapUser(user: User) = user.copy(
+    username = Username(username),
     email = Email(email),
-    username = username,
     fullname = fullname)
 
 }
@@ -20,6 +21,6 @@ case class UserInfo(
 object UserInfo {
 
   def apply(user: User): UserInfo =
-    UserInfo(user.email.email, user.username, user.fullname)
+    UserInfo(user.username.username, user.email.email, user.fullname)
 
 }

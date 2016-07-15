@@ -1,19 +1,18 @@
 package simbl.domain
 
-import longevity.subdomain.Assoc
 import longevity.subdomain.persistent.Root
 import longevity.subdomain.ptype.RootType
 
 case class Blog(
-  uri: Uri,
+  uri: BlogUri,
   title: String,
   description: Markdown,
-  authors: Set[Assoc[User]])
+  authors: Set[Username])
 extends Root
 
 object Blog extends RootType[Blog] {
   object props {
-    val uri = prop[Uri]("uri")
+    val uri = prop[BlogUri]("uri")
   }
   object keys {
     val uri = key(props.uri)
