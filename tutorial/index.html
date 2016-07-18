@@ -243,6 +243,354 @@
       
     </div>
 
+    <div>
+      <h2>The Akka HTTP Routes</h2>
+
+      <p>
+        Let's skip ahead to look at the Akka HTTP routes. In a moment,
+        we'll come back to our service class to see how these routes
+        are hooked up to the back-end repositories.
+      </p>
+
+      <p>
+        These routes define an application API that might be used by
+        a JavaScript application front-end. We haven't had the time to
+        actually write a front end yet. If you would like to give it a
+        shot, we would happily look over any pull requests!
+      </p>
+
+      <p>
+        <a href="#code/src/main/scala/simbl/api/UserRoute.scala"
+        class="shortcut"><code>UserRoute.scala</code></a> defines the
+        Simpli Blogging API for users and user profiles. The following
+        routes are defined:
+      </p>
+
+      <ul>
+        <li><code>POST /users</code> - creates a new user</li>
+        <li><code>GET /users</code> - retrieves all the users</li>
+        <li><code>GET /users/$username</code> - retrieves a single user</li>
+        <li><code>PUT /users/$username</code> - updates an existing user</li>
+        <li><code>DELETE /users/$username</code> - deletes an existing
+        user</li>
+        <li><code>GET /users/$username/profile</code> - retrieves a
+        user profile</li>
+        <li><code>PUT /users/$username/profile</code> - creates or updates a
+        user profile</li>
+        <li><code>DELETE /users/$username/profile</code> - deletes a
+        user profile</li>
+      </ul>
+
+      <p>
+        <i>Please note that the <code>GET /users</code> endpoint will
+        not work with a Cassandra persistence strategy, because
+        Cassandra does not support unfiltered queries.</i>
+      </p>
+
+      <p>
+        These routes are defined in the standard idiom
+        of <a href="http://doc.akka.io/docs/akka/2.4.8/scala/http/">Akka
+        HTTP</a>, and we will not go into the details here. For our
+        purposes, the important thing to note is that the work for
+        each of these endpoints is delegated to one of the methods in 
+        <a href="#code/src/main/scala/simbl/service/UserService.scala"
+        class="shortcut"><code>UserService.scala</code></a>, which we
+        will turn to next.
+      </p>
+      
+    </div>
+
+    <div>
+      <h2>The User Service</h2>
+
+      <p>
+        Before getting into the implementation of these service
+        methods, let's take a look at the user service API, found in
+        <a href="#code/src/main/scala/simbl/service/UserService.scala"
+        class="shortcut"><code>UserService.scala</code></a>. We find
+        eight service methods here that mirror the eight 
+        <a href="#tutorial/7">user routes</a>.
+      </p>
+
+      <p>
+        The most important thing to note here is that each of the
+        service methods is defined in terms of API classes
+        <a href="#code/src/main/scala/simbl/api/UserInfo.scala"
+        class="shortcut"><code>UserInfo.scala</code></a> and
+        <a href="#code/src/main/scala/simbl/api/ProfileInfo.scala"
+        class="shortcut"><code>ProfileInfo.scala</code></a>,
+        and <i>not</i> in terms of the domain entities
+        themselves. This is probably not necessary for such a simple
+        application as this, but it's a good practice, because the UI
+        typically speaks in a slightly different language than the
+        domain model. As a simple example, some user information, such
+        as email or street address, should largely be considered
+        private, and should be left out of most UI views.
+      </p>
+
+      <p>
+        As you can see, <code>UserInfo</code>
+        and <code>ProfileInfo</code> are simple case classes that
+        should convert in and out of JSON cleanly. They also each
+        contain a couple of methods for conversions between the UI
+        objects and the domain objects.
+      </p>
+    </div>  
+
+    <div>
+      <h2>User Service Implementation</h2>
+
+      <p>
+        Implementations for the methods in
+        <a href="#code/src/main/scala/simbl/service/UserService.scala"
+        class="shortcut"><code>UserService.scala</code></a> are
+        provided in 
+        <a href="#code/src/main/scala/simbl/service/UserServiceImpl.scala"
+           class="shortcut"><code>UserServiceImpl.scala</code></a>. To
+           do its job, the <code>UserServiceImpl</code> needs a user
+           repository, which is retrieved from
+           the <code>LongevityContext</code> in 
+        <a href="#code/src/main/scala/simbl/SimblContextImpl.scala"
+        class="shortcut"><code>SimblContextImpl.scala</code></a>. Because
+        most of the repository methods need an execution context to
+        run in, <code>SimblContextImpl</code> also provides an
+        execution context that it pulls out of the
+        Akka <code>ActorSystem</code>. Akka HTTP already needs
+        an <code>ActorSystem</code> to run; In other scenarios, you
+        can always find an execution context
+        in <code>scala.concurrent.ExecutionContext.Implicits.global</code>.
+      </p>
+
+      <p>
+        There are a lot of service methods
+        in <code>UserServiceImpl</code>. In this tutorial, we will
+        focus on
+        three: <code>createUser</code>, <code>retrieveUser</code>,
+        and <code>updateUser</code>.
+      </p>
+
+    </div>
+
+    <div>
+      <h2>UserServiceImpl.createUser</h2>
+
+      <p>
+        The heart of the
+        <a href="#code/src/main/scala/simbl/service/UserServiceImpl.scala"
+           class="shortcut"><code>UserServiceImpl.createUser</code></a>. is
+           the call to <code>userRepo.create</code>, inside the for
+           comprehension. <code>userRepo.create</code> returns
+           a <code>Future[PState[User]]</code>. The future is there
+           because we want to treat the underlying database call in an
+           asynchronous fashion. The <code>User</code> is further
+           wrapped in a <code>PState</code>, or <i>persistent
+           state</i>, which contains persistence information about the
+           user that is not part of the domain model. You don't need
+           to know much of anything about a <code>PState</code>,
+           except that you can call methods <code>get</code>
+           and <code>map</code> on it, to work with the
+           underlying <code>User</code> inside.
+      </p>
+
+      <p>
+        In the yield clause of the for comprehension in this
+        method, <code>created.get</code> retrieves
+        the <code>User</code> from the <code>PState</code>. This in
+        turn is passed to a method that converts from
+        a <code>User</code> to a <code>UserInfo</code>. The for
+        comprehension wraps this back up in a <code>Future</code> in
+        turn, which is exactly the kind of thing that Akka HTTP wants
+        to work with.
+      </p>
+
+      <p>
+        One caveat here is that <code>userRepo.create</code> might
+        actually fail with a duplicate key exception. There might
+        already be a user that has either the same username or
+        email. So we call <code>recover</code> on the
+        resulting <code>Future</code> and convert the
+        longevity <code>DuplicateKeyValException</code> into a
+        service-level exception:
+        either <code>DuplicateUsernameException</code>
+        or <code>DuplicateEmailException</code>. Our Akka HTTP route
+        responds to these exceptions by producing a <code>409
+        Conflict</code>.
+      </p>
+      
+    </div>
+
+    <div>
+      <h2>UserServiceImpl.retrieveUser</h2>
+
+      <p>
+        <a href="#code/src/main/scala/simbl/service/UserServiceImpl.scala"
+           class="shortcut"><code>UserServiceImpl.retrieveUser</code></a>
+           does its work by calling <code>userRepo.retrieve</code>. To
+           call this method, we have to convert from
+           the <code>username</code> string to
+           a <code>Username</code>, as <code>userRepo.retrieve</code>
+           takes a <code>KeyVal</code> as argument.
+      </p>
+      
+      <p>
+        Once again, the <code>User</code> is wrapped in
+        a <code>PState</code>, so we can manipulate its persistent
+        state if we wish. This in turn is wrapped in
+        an <code>Option</code>, as there may or may not be a user with
+        that username. This in turn is wrapped in
+        a <code>Future</code>, as we want to treat the database call
+        in an asynchronous fashion. This feels like a lot of layers of
+        wrapping, but they are not too painful to work with if you use
+        for comprehensions.
+      </p>
+
+      <p>
+        Once the user is retrieved, we still need to map
+        the <code>Option[PState[User]]</code> to
+        an <code>Option[UserInfo]</code>. This is done in two lines in
+        the <code>yield</code> clause of the for comprehension.
+      </p>
+      
+    </div>
+
+    <div>
+      <h2>UserServiceImpl.updateUser</h2>
+
+      <p>
+        Let's take a look at
+        <a href="#code/src/main/scala/simbl/service/UserServiceImpl.scala"
+           class="shortcut"><code>UserServiceImpl.updateUser</code></a>. This
+           method shows a variation
+           on <code>userRepo.retrieve</code>: <code>userRepo.retrieveOne</code>. <code>retrieveOne</code>
+           opens up the <code>Option</code> for you, throwing
+           a <code>NoSuchElementException</code> if
+           the <code>Option</code> is empty. We handle
+           the <code>NoSuchElementException</code> in
+           the <code>recover</code> clause,
+           returning <code>None</code> if the <code>User</code> was
+           not found. Akka HTTP will handle the <code>None</code> by
+           returning a <code>404 Not Found</code>, which is exactly
+        what we want.
+      </p>
+
+      <p>
+        The <code>retrieved</code> in the for comprehension is
+        a <code>PState[User]</code>. Calling <code>retrieved.map</code>
+        produces another <code>PState[User]</code> that reflects the
+        changes produced by the function passed
+        to <code>map</code>. In this case, we
+        call <code>UserInfo.mapUser</code>, which updates
+        a <code>User</code> according to the information in
+        the <code>UserInfo</code>. The resulting <code>PState</code>
+        is stored in a local val named <code>modified</code>.
+      </p>
+
+      <p>
+        We then pass <code>modified</code> on
+        to <code>userRepo.update</code>. This method persists the
+        changes, but like <code>userRepo.create</code>, it might
+        generate a <code>DuplicateKeyValException</code> if we try to
+        update the user to have a conflicting username or email. Once
+        again, we handle this problem in the <code>recover</code>
+        clause, converting the longevity exception into a Simple
+        Blogging service exception.
+      </p>
+      
+    </div>
+
+    <div>
+      <h2>Exercising the API</h2>
+
+      <p>
+        Of course, this API actually works. Feel free to play around
+        with it with the tool of your choice. You could use a UNIX
+        tool such as <a href="https://github.com/curl/curl">curl</a>,
+        or perhaps a Chrome plugin such as
+        <a href="https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop">Postman</a>
+        or <a href="https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo">Advanced
+        REST client</a>. We have a slight preference towards the
+        Advanced REST client at the moment. It is a little less quirky
+        than Postman.
+      </p>
+
+      <p>
+        If you choose to use the Advanced REST client, we've exported
+        our sample requests
+        to <a href="#code/tutorial/arc-simbl-export.json">arc-simbl-export.json</a>. You
+        can use this as a starting point.
+      </p>
+      
+    </div>
+
+    <div>
+      <h2>Testing CRUD Operations</h2>
+
+      <p>
+        Before we wrap up, we'd like to point out a useful tool that
+        you can pull out of the <code>LongevityContext</code>:
+        the <code>RepoCrudSpec</code>. This will test all of your CRUD
+        operations for all of your persistent types against a test
+        database. It's trivial to set up, as you can see
+        in <a href="#code/src/test/scala/simbl/SimblRepoCrudSpec.scala">SimblRepoCrudSpec.scala</a>. There's
+        also a little framework for testing queries, and you can see
+        an example of that in 
+        <a href="#code/src/test/scala/simbl/BlogPostQuerySpec.scala">BlogPostQuerySpec.scala</a>. You
+        can run these for yourself using the <code>Test</code> tab in
+        the left margin, or by running <code>sbt test</code> from the
+        console.
+      </p>
+
+    </div>
+
+    <div>
+      <h2>Exercises for the Reader</h2>
+
+      <p>
+        While Simple Blogging is a working application, it has been
+        developed for the purposes of this tutorial, and consequently,
+        it is incomplete in a number of ways. As an exercise, you
+        might try to enhance the application to fill in the gaps. We
+        will be happy to consider any pull requests you make that fill
+        in missing features. Here are some ideas for experimentations
+        you might try:
+      </p>
+
+      <ul>
+        <li>
+          Add a <code>Comment</code> aggregate to the subdomain.
+        </li>
+        <li>
+          Put in service methods and routes for <code>BlogPost</code>
+          and <code>Blog</code>.
+        </li>
+        <li>
+          Write unit tests for the Akka HTTP routes.
+        </li>
+        <li>
+          Write unit tests for <code>UserServiceImpl</code>,
+          preferably using a mock object for the user repository.
+        </li>
+        <li>
+          Write a simple UI that uses the backing API.
+        </li>
+      </ul>
+
+      <p>
+        Thank you very much for working through this tutorial! We hope
+        you enjoy longevity as much as you do. If you would like to
+        investigate further, please take a look at
+        our <a href="http://longevityframework.github.io/longevity/manual/">user
+        manual</a>. Also, please write to
+        our <a href="https://groups.google.com/forum/#!forum/longevity-users">discussion
+        forum</a> to tell us about about your experience with
+        longevity, or to ask any questions.
+      </p>
+
+      <p>
+        Happy coding!
+      </p>
+
+    </div>
     
   </body>
 </html>

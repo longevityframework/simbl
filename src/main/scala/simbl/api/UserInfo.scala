@@ -11,6 +11,7 @@ case class UserInfo(
 
   def toUser = User(Username(username), Email(email), fullname, None)
 
+  /** updates a [[User]] according to the information in this [[UserInfo]] */
   def mapUser(user: User) = user.copy(
     username = Username(username),
     email = Email(email),
