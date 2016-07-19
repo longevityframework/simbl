@@ -10,20 +10,22 @@
       <p>
         This tutorial walks through the basic steps needed to get
         started building a real-life application
-        with <a href="http://longevityframework.github.io/longevity/">longevity</a>. The
-        application we will be looking at here is a sample blogging
-        application, built with longevity on the back end, and using
-        <a href="http://doc.akka.io/docs/akka/2.4.7/scala/http/">Akka
-        HTTP</a> for a REST API that could be used by a web client.
+        with <a href="http://longevityframework.github.io/longevity/"
+        target="_blank">longevity</a>. The application we will be
+        looking at here is a sample blogging application, built with
+        longevity on the back end, and using
+        <a href="http://doc.akka.io/docs/akka/2.4.7/scala/http/"
+        target="_blank">Akka HTTP</a> for a REST API that could be
+        used by a web client.
       </p>
 
       <p>
         We will only have the chance to cover a portion of the
-        blogging application code
-        in this tutorial, so please feel free to explore the codebase
-        further on your own. You can also look to
-        the <a href="http://longevityframework.github.io/longevity/manual/">user
-        manual</a> for more information.
+        blogging application code in this tutorial, so please feel
+        free to explore the codebase further on your own. You can also
+        look to
+        the <a href="http://longevityframework.github.io/longevity/manual/"
+        target="_blank">user manual</a> for more information.
       </p>
     </div>
     
@@ -32,12 +34,12 @@
 
       <p>
         We have
-        four <a href="http://longevityframework.github.io/longevity/manual/ddd-basics/aggregates-and-entities.html">entity
-        aggregates</a> in our domain model: users, blogs, blog posts,
-        and comments. The arrows in this diagram indicate
-        relationships between aggregates: comments are made on blog
-        posts; blog posts are made in a blog; and blogs, blog posts
-        and comments all have authors:
+        four <a href="http://longevityframework.github.io/longevity/manual/ddd-basics/aggregates-and-entities.html"
+        target="_blank">entity aggregates</a> in our domain model:
+        users, blogs, blog posts, and comments. The arrows in this
+        diagram indicate relationships between aggregates: comments
+        are made on blog posts, blog posts are made in a blog, and
+        blogs, blog posts and comments all have authors:
       </p>
 
       <p>
@@ -76,8 +78,8 @@
         things we want to persist to the database. We could
         use <code>Persistent</code> here instead, but we
         use <code>Root</code> because <code>User</code> is
-        the <a href="http://longevityframework.github.io/longevity/manual/ddd-basics/aggregates-and-entities.html">aggregate
-        root</a>.
+        the <a href="http://longevityframework.github.io/longevity/manual/ddd-basics/aggregates-and-entities.html"
+        target="_blank">aggregate root</a>.
       </p>
 
       <p>
@@ -87,20 +89,18 @@
         relationship between <code>User</code>
         and <code>UserProfile</code>. There are also a couple of
         business methods inside: <code>updateProfile</code>
-        and <code>deleteProfile</code>. These methods are pretty
-        trivial, but they provide us with examples of business
-        methods that we will use later on.
+        and <code>deleteProfile</code>.
       </p>
 
       <p>
         The <code>User</code> companion object provides metadata about
-        the <code>User</code>: stuff that pertains not to an
+        the <code>User</code>: information that pertains not to an
         individual user, but to a collection of them. We first specify
         two properties, <code>User.props.username</code>
         and <code>User.props.email</code>, that we use to refer to
         members of <code>User</code> objects. Then we define two
         keys: <code>User.keys.username</code>
-        and <code>User.keys.email</code>, that specifies that these
+        and <code>User.keys.email</code>, that specify that these
         two member are to be unique: no two users should have the same
         username or email.
       </p>
@@ -125,7 +125,7 @@
                part of the user aggregate. It's a simple case class
                that extends
                trait <code>Entity</code>. <code>Entity</code> is a
-               subclas of the empty trait <code>Embeddable</code>
+               subclas of the empty trait <code>Embeddable</code>,
                which we use to mark things that we want to embed in
         our persistent objects.
       </p>
@@ -136,14 +136,14 @@
         class="shortcut"><code>Uri</code></a>
         and <a href="#code/src/main/scala/simbl/domain/Markdown.scala"
         class="shortcut"><code>Markdown</code></a>. These are simple
-        wrapper classes for strings, which provide type safety, but
-        are also places where we might add some extra functionality in
-        the future. For instance, the <code>Uri</code> constructor might
-        throw some kind of validation exception if the provided string
-        is not a valid URI. Both of these classes
-        are <code>ValueObjects</code>, which also extends
-        the <code>Embeddable</code> trait. As you can see, we can
-        freely nest <code>Embeddables</code> within
+        wrapper classes for strings, which provide extra type safety,
+        but are also places where we might add some extra
+        functionality in the future. For instance,
+        the <code>Uri</code> constructor might throw some kind of
+        validation exception if the provided string is not a valid
+        URI. Both of these classes extend <code>ValueObject</code>,
+        which in turn extends the <code>Embeddable</code> trait. As you
+        can see, we can freely nest <code>Embeddables</code> within
         our <code>Persistent</code> classes.
       </p>
 
@@ -181,10 +181,11 @@
       <h2>Building the Subdomain</h2>
 
       <p>
-        Once the classes of
-        our <a href="http://longevityframework.github.io/longevity/manual/ddd-basics/subdomains-and-bounded-contexts.html">subdomain</a>
-        have been created, we gather them all together into
-        a <code>Subdomain</code> object. We do this in
+        Once the elements of
+        our <a href="http://longevityframework.github.io/longevity/manual/ddd-basics/subdomains-and-bounded-contexts.html"
+        target="_blank">subdomain</a> have been created, we gather
+        them all together into a <code>Subdomain</code> object. We do
+        this in
         <a href="#code/src/main/scala/simbl/domain/SimblCoreDomain.scala"
         class="shortcut"><code>SimblCoreDomain</code></a> by extending
         abstract class <code>CoreDomain</code>, which is a kind
@@ -197,7 +198,7 @@
         our <code>Persistents</code> and <code>Embeddables</code> into a
         <code>PTypePool</code> and <code>ETypePool</code>,
         respectively. These are simple collections
-        of <code>PTypes</code> and <code>ETypes</code>; You can think
+        of <code>PTypes</code> and <code>ETypes</code>. You can think
         of them as sets.
       </p>
 
@@ -230,10 +231,9 @@
       </p>
 
       <p>
-        Longevity
-        uses <a href="https://github.com/typesafehub/config">Typesafe
-        Config</a> to configure the longevity context. Typically, the
-        configuration is drawn from
+        Longevity uses <a href="https://github.com/typesafehub/config"
+        target="_blank">Typesafe Config</a> to configure the longevity
+        context. Typically, the configuration is drawn from
         the <a href="#code/src/main/resources/application.conf"><code>application.conf</code></a>
         resource file. Here, you can find configurations for main and
         test databases for both Mongo and Cassandra. If you want to
@@ -256,7 +256,7 @@
         These routes define an application API that might be used by
         a JavaScript application front-end. We haven't had the time to
         actually write a front end yet. If you would like to give it a
-        shot, we would happily look over any pull requests!
+        shot, we would happily consider any pull requests!
       </p>
 
       <p>
@@ -289,10 +289,11 @@
 
       <p>
         These routes are defined in the standard idiom
-        of <a href="http://doc.akka.io/docs/akka/2.4.8/scala/http/">Akka
-        HTTP</a>, and we will not go into the details here. For our
-        purposes, the important thing to note is that the work for
-        each of these endpoints is delegated to one of the methods in 
+        of <a href="http://doc.akka.io/docs/akka/2.4.8/scala/http/"
+        target="_blank">Akka HTTP</a>, and we will not go into the
+        details here. For our purposes, the important thing to note is
+        that the work for each of these endpoints is delegated to one
+        of the methods in
         <a href="#code/src/main/scala/simbl/service/UserService.scala"
         class="shortcut"><code>UserService.scala</code></a>, which we
         will turn to next.
@@ -332,7 +333,7 @@
         As you can see, <code>UserInfo</code>
         and <code>ProfileInfo</code> are simple case classes that
         should convert in and out of JSON cleanly. They also each
-        contain a couple of methods for conversions between the UI
+        contain a couple of methods for conversions between the API
         objects and the domain objects.
       </p>
     </div>  
@@ -356,13 +357,13 @@
         run in, <code>SimblContextImpl</code> also provides an
         execution context that it pulls out of the
         Akka <code>ActorSystem</code>. Akka HTTP already needs
-        an <code>ActorSystem</code> to run; In other scenarios, you
-        can always find an execution context
+        an <code>ExecutionContext</code> to run. In other scenarios,
+        you can always find an execution context
         in <code>scala.concurrent.ExecutionContext.Implicits.global</code>.
       </p>
 
       <p>
-        There are a lot of service methods
+        There are a number of service methods
         in <code>UserServiceImpl</code>. In this tutorial, we will
         focus on
         three: <code>createUser</code>, <code>retrieveUser</code>,
@@ -397,10 +398,10 @@
         method, <code>created.get</code> retrieves
         the <code>User</code> from the <code>PState</code>. This in
         turn is passed to a method that converts from
-        a <code>User</code> to a <code>UserInfo</code>. The for
-        comprehension wraps this back up in a <code>Future</code> in
-        turn, which is exactly the kind of thing that Akka HTTP wants
-        to work with.
+        a <code>User</code> to a <code>UserInfo</code>. Then the for
+        comprehension wraps this back up in a <code>Future</code>,
+        which is exactly the kind of thing that Akka HTTP wants to
+        work with.
       </p>
 
       <p>
@@ -412,9 +413,11 @@
         longevity <code>DuplicateKeyValException</code> into a
         service-level exception:
         either <code>DuplicateUsernameException</code>
-        or <code>DuplicateEmailException</code>. Our Akka HTTP route
-        responds to these exceptions by producing a <code>409
-        Conflict</code>.
+        or <code>DuplicateEmailException</code>. Our
+        <a href="#code/src/main/scala/simbl/api/UserRoute.scala"
+           class="shortcut"><code>Akka HTTP route</code></a> responds
+           to these exceptions by producing a <code>409
+           Conflict</code>.
       </p>
       
     </div>
@@ -448,7 +451,10 @@
         Once the user is retrieved, we still need to map
         the <code>Option[PState[User]]</code> to
         an <code>Option[UserInfo]</code>. This is done in two lines in
-        the <code>yield</code> clause of the for comprehension.
+        the <code>yield</code> clause of the for
+        comprehension. When <code>retrieveUser</code> returns a
+        future <code>None</code>, Akka HTTP will generate a <code>404
+        Not Found</code>
       </p>
       
     </div>
@@ -504,13 +510,14 @@
       <p>
         Of course, this API actually works. Feel free to play around
         with it with the tool of your choice. You could use a UNIX
-        tool such as <a href="https://github.com/curl/curl">curl</a>,
+        tool such as <a href="https://github.com/curl/curl" target="_blank">curl</a>,
         or perhaps a Chrome plugin such as
-        <a href="https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop">Postman</a>
-        or <a href="https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo">Advanced
-        REST client</a>. We have a slight preference towards the
-        Advanced REST client at the moment. It is a little less quirky
-        than Postman.
+        <a href="https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop"
+        target="_blank">Postman</a>
+        or <a href="https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo"
+        target="_blank">Advanced REST client</a>. We have a slight
+        preference towards the Advanced REST client at the moment. It
+        is a little less quirky than Postman.
       </p>
 
       <p>
@@ -580,13 +587,15 @@
 
       <p>
         Thank you very much for working through this tutorial! We hope
-        you enjoy longevity as much as we do. If you would like to
-        investigate further, please take a look at
-        our <a href="http://longevityframework.github.io/longevity/manual/">user
-        manual</a>. Also, please write to
-        our <a href="https://groups.google.com/forum/#!forum/longevity-users">discussion
-        forum</a> to tell us about about your experience with
-        longevity, or to ask any questions.
+        you enjoy
+        <a href="http://longevityframework.github.io/longevity/"
+        target="_blank">longevity</a> as much as we do. If you would
+        like to investigate further, please take a look at
+        our <a href="http://longevityframework.github.io/longevity/manual/"
+        target="_blank">user manual</a>. Also, please write to
+        our <a href="https://groups.google.com/forum/#!forum/longevity-users"
+        target="_blank">discussion forum</a> to tell us about about
+        your experience with longevity, or to ask any questions.
       </p>
 
       <p>
