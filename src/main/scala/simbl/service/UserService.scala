@@ -28,6 +28,12 @@ trait UserService {
 
   /** updates a [[User]] by username, returning a [[UserInfo]] reflecting the
    * persisted `User`. returns `None` if no such user by that username.
+   *
+   * @throws DuplicateUsernameException if a user with the supplied username
+   * already exists
+   * 
+   * @throws DuplicateEmailException if a user with the supplied email already
+   * exists
    */
   def updateUser(username: String, info: UserInfo): Future[Option[UserInfo]]
 
