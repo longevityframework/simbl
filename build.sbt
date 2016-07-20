@@ -23,7 +23,7 @@ scalacOptions ++= Seq(
 
 libraryDependencies ++= {
   val akkaVersion = "2.4.7"
-  val longevityVersion = "0.9-SNAPSHOT"
+  val longevityVersion = "0.9.0"
   val scalaTestVersion = "2.2.6"
   val scalaTimeVersion = "2.10.0"
   Seq(
