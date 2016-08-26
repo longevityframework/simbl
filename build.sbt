@@ -23,9 +23,9 @@ scalacOptions ++= Seq(
 
 libraryDependencies ++= {
   val akkaVersion = "2.4.7"
-  val longevityVersion = "0.9.0"
-  val scalaTestVersion = "2.2.6"
-  val scalaTimeVersion = "2.10.0"
+  val longevityVersion = "0.10.0"
+  val scalaTestVersion = "3.0.0"
+  val scalaTimeVersion = "2.12.0"
   Seq(
     "com.github.nscala-time" %% "nscala-time" % scalaTimeVersion,
     "com.typesafe.akka" %% "akka-http-core" % akkaVersion,
