@@ -146,16 +146,6 @@
         can see, we can freely nest <code>Embeddables</code> within
         our <code>Persistent</code> classes.
       </p>
-
-      <p>
-        We also provide an <code>EntityType</code> in
-        the <code>UserProfile</code> companion
-        object. <code>EntityType</code> is a subclass
-        of <code>EType</code>, which is a type class for
-        an <code>Embeddable</code>. There's nothing fancy inside it,
-        but we need this class to make longevity aware of what kinds
-        of things might be embedded in our persistent objects.
-      </p>
     </div>
     
     <div>
@@ -195,11 +185,12 @@
 
       <p>
         As you can see in the code, we need to gather up all
-        our <code>Persistents</code> and <code>Embeddables</code> into a
-        <code>PTypePool</code> and <code>ETypePool</code>,
-        respectively. These are simple collections
-        of <code>PTypes</code> and <code>ETypes</code>. You can think
-        of them as sets.
+        our <code>PTypes</code> into a
+        <code>PTypePool</code>. We also create <code>ETypes</code> for
+        our <code>Embeddables</code>, and gather them into an <code>ETypePool</code>.
+        <code>PTypePool</code> and <code>ETypePool</code> are simple
+        collections of <code>PTypes</code>
+        and <code>ETypes</code>. You can think of them as sets.
       </p>
 
     </div>
