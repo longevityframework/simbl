@@ -26,7 +26,9 @@ libraryDependencies ++= {
   val longevityVersion = "0.11.2"
   val scalaTestVersion = "3.0.0"
   val scalaTimeVersion = "2.12.0"
+  val slf4jSimpleVersion = "1.7.21"
   Seq(
+    "org.slf4j" % "slf4j-simple" % slf4jSimpleVersion,
     "com.github.nscala-time" %% "nscala-time" % scalaTimeVersion,
     "com.typesafe.akka" %% "akka-http-core" % akkaVersion,
     "com.typesafe.akka" %% "akka-http-experimental" % akkaVersion,
