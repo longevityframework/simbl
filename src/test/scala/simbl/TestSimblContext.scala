@@ -2,7 +2,6 @@ package simbl
 
 import akka.actor.ActorSystem
 import longevity.context.LongevityContext
-import longevity.context.Mongo
 import simbl.api.BlogRoute
 import simbl.api.BlogPostRoute
 import simbl.api.UserRoute
@@ -17,7 +16,7 @@ import simbl.service.UserServiceImpl
 /** default container for all the Simble application components */
 trait TestSimblContext extends SimblContext {
   val coreDomain = new SimblCoreDomain
-  val longevityContext = LongevityContext(coreDomain, Mongo)
+  val longevityContext = LongevityContext(coreDomain)
 
   val repoPool = longevityContext.testRepoPool
   val blogRepo = repoPool[Blog]

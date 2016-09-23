@@ -212,16 +212,6 @@
       </p>
 
       <p>
-        Apart from the subdomain itself, we have to provide
-        a <code>PersistenceStrategy</code> when building the longevity
-        context. Your choices are
-        currently <code>InMem</code>, <code>Mongo</code>,
-        and <code>Cassandra</code>. We use <code>InMem</code> out of
-        the box, so that this tutorial will work even if you don't
-        have a MongoDB or Cassandra database set up for use.
-      </p>
-
-      <p>
         Longevity uses <a href="https://github.com/typesafehub/config"
         target="_blank">Typesafe Config</a> to configure the longevity
         context. Typically, the configuration is drawn from
@@ -232,6 +222,15 @@
         real database, you may need to tweak this configuration.
       </p>
       
+      <p>
+        You also need to specify the back end in configuration
+        property <code>longevity.backEnd</code>. Your choices are
+        currently <code>InMem</code>, <code>Mongo</code>,
+        and <code>Cassandra</code>. We use <code>InMem</code> out of
+        the box, so that this tutorial will work even if you don't
+        have a MongoDB or Cassandra database set up for use.
+      </p>
+
     </div>
 
     <div>
