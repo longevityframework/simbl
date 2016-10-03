@@ -1,5 +1,5 @@
 package simbl.domain
 
-import longevity.subdomain.embeddable.ValueObject
+import longevity.subdomain.embeddable.Embeddable
 
-case class Markdown(markdown: String) extends ValueObject
+case class Markdown(markdown: String) extends Embeddable

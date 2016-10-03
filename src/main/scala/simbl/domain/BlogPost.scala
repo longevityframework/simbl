@@ -1,8 +1,8 @@
 package simbl.domain
 
-import longevity.subdomain.persistent.Root
+import longevity.subdomain.persistent.Persistent
 import longevity.subdomain.ptype.Query
-import longevity.subdomain.ptype.RootType
+import longevity.subdomain.ptype.PType
 import org.joda.time.DateTime
 
 case class BlogPost(
@@ -14,9 +14,9 @@ case class BlogPost(
   postDate: DateTime,
   blog: BlogUri,
   authors: Set[Username])
-extends Root
+extends Persistent
 
-object BlogPost extends RootType[BlogPost] {
+object BlogPost extends PType[BlogPost] {
 
   object props {
     val uri = prop[BlogPostUri]("uri")

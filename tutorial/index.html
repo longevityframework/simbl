@@ -73,13 +73,8 @@
 
       <p>
         The <code>User</code> is a simple case class that extends
-        longevity trait <code>Root</code>. <code>Root</code> extends
-        the empty trait <code>Persistent</code>, which we use to mark
-        things we want to persist to the database. We could
-        use <code>Persistent</code> here instead, but we
-        use <code>Root</code> because <code>User</code> is
-        the <a href="http://longevityframework.github.io/longevity/manual/ddd-basics/aggregates-and-entities.html"
-        target="_blank">aggregate root</a>.
+        empty longevity trait <code>Persistent</code>. which we use to mark
+        things we want to persist to the database.
       </p>
 
       <p>
@@ -107,11 +102,10 @@
 
       <p>
         The <code>User</code> companion object
-        extends <code>RootType</code>, a subclass
-        of <code>PType</code>, which is a type class for
+        extends <code>PType</code>, which is a type class for
         a <code>Persistent</code>. Every <code>PType</code> defines
         its <code>props</code>, <code>keys</code>,
-            and <code>indexes</code>, as you see in this example.
+        and <code>indexes</code>, as you see in this example.
       </p>
       
     </div>
@@ -123,9 +117,7 @@
         The <a href="#code/src/main/scala/simbl/domain/UserProfile.scala"
                class="shortcut">user profile</a> is an entity that is
                part of the user aggregate. It's a simple case class
-               that extends
-               trait <code>Entity</code>. <code>Entity</code> is a
-               subclass of the empty trait <code>Embeddable</code>,
+               that extends the empty longevity trait <code>Embeddable</code>,
                which we use to mark things that we want to embed in
         our persistent objects.
       </p>
@@ -141,9 +133,8 @@
         functionality in the future. For instance,
         the <code>Uri</code> constructor might throw some kind of
         validation exception if the provided string is not a valid
-        URI. Both of these classes extend <code>ValueObject</code>,
-        which in turn extends the <code>Embeddable</code> trait. As you
-        can see, we can freely nest <code>Embeddables</code> within
+        URI. As you can see, we can freely
+        nest <code>Embeddables</code> within
         our <code>Persistent</code> classes.
       </p>
     </div>
