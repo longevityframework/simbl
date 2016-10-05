@@ -33,13 +33,11 @@
       <h2>Modeling our Subdomain</h2>
 
       <p>
-        We have
-        four <a href="http://longevityframework.github.io/longevity/manual/ddd-basics/aggregates-and-entities.html"
-        target="_blank">entity aggregates</a> in our domain model:
-        users, blogs, blog posts, and comments. The arrows in this
-        diagram indicate relationships between aggregates: comments
-        are made on blog posts, blog posts are made in a blog, and
-        blogs, blog posts and comments all have authors:
+        We have four types in our domain model that we want to
+        persist: users, blogs, blog posts, and comments. The arrows in
+        this diagram indicate relationships between them: comments are
+        made on blog posts, blog posts are made in a blog, and blogs,
+        blog posts and comments all have authors:
       </p>
 
       <p>
@@ -48,8 +46,8 @@
 
       <p>
         For the purposes of this tutorial, we are going to focus in on
-        the user aggregate. This aggregate consists of two entities: the
-        user itself, and the user profile:
+        the user, which consists of two main parts: the user itself, and
+        the user profile:
       </p>
       
       <p>
@@ -59,16 +57,16 @@
     </div>
 
     <div>
-      <h2>Building the User Aggregate</h2>
+      <h2>Building the User</h2>
 
       <p>
-        The user aggregate has four parts: the <code>User</code>,
+        The user has four parts: the <code>User</code>,
         the <code>UserProfile</code>, and two natural keys:
-        the <code>Username</code> and the <code>Email</code>.
-        Let's focus on the <code>User</code> first, since that is the
-        heart of the aggregate. You can find the source code
+        the <code>Username</code> and the <code>Email</code>.  Let's
+        focus on the <code>User</code> first. You can find the source
+        code
         for <code>User</code> <a href="#code/src/main/scala/simbl/domain/User.scala"
-                                 class="shortcut">here</a>
+        class="shortcut">here</a>
       </p>
 
       <p>
@@ -115,8 +113,7 @@
 
       <p>
         The <a href="#code/src/main/scala/simbl/domain/UserProfile.scala"
-               class="shortcut">user profile</a> is an entity that is
-               part of the user aggregate. It's a simple case class
+               class="shortcut">user profile</a> is a simple case class
                that extends the empty longevity trait <code>Embeddable</code>,
                which we use to mark things that we want to embed in
         our persistent objects.
@@ -162,9 +159,7 @@
       <h2>Building the Subdomain</h2>
 
       <p>
-        Once the elements of
-        our <a href="http://longevityframework.github.io/longevity/manual/ddd-basics/subdomains-and-bounded-contexts.html"
-        target="_blank">subdomain</a> have been created, we gather
+        Once all the elements we want to persist have been created, we gather
         them all together into a <code>Subdomain</code> object. We do
         this in
         <a href="#code/src/main/scala/simbl/domain/SimblSubdomain.scala"
