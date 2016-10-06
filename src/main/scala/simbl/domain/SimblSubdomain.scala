@@ -1,9 +1,9 @@
 package simbl.domain
 
+import longevity.subdomain.EType
+import longevity.subdomain.ETypePool
+import longevity.subdomain.PTypePool
 import longevity.subdomain.Subdomain
-import longevity.subdomain.embeddable.ETypePool
-import longevity.subdomain.embeddable.EType
-import longevity.subdomain.ptype.PTypePool
 
 class SimblSubdomain extends Subdomain(
   "Simple Blogging",
