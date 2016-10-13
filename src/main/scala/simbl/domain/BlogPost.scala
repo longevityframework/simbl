@@ -2,7 +2,7 @@ package simbl.domain
 
 import longevity.subdomain.PType
 import longevity.subdomain.Persistent
-import longevity.subdomain.ptype.Query
+import longevity.subdomain.query.Query
 import org.joda.time.DateTime
 
 case class BlogPost(

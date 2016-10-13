@@ -3,7 +3,6 @@ package simbl.service
 import longevity.exceptions.persistence.DuplicateKeyValException
 import longevity.persistence.PState
 import longevity.persistence.Repo
-import longevity.subdomain.ptype.Query.All
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import simbl.api.ProfileInfo
@@ -32,7 +31,8 @@ extends UserService {
   def retrieveAllUsers(): Future[Seq[UserInfo]] = {
     def stateToInfo(state: PState[User]) = UserInfo(state.get)
     def usersToUserInfos(users: Seq[PState[User]]) = users.map(stateToInfo)
-    userRepo.retrieveByQuery(All()).map(usersToUserInfos)
+    import User.queryDsl._
+    userRepo.retrieveByQuery(filterAll).map(usersToUserInfos)
   }
 
   def retrieveUser(username: String): Future[Option[UserInfo]] = {

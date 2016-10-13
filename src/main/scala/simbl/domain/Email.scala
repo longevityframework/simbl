@@ -2,5 +2,4 @@ package simbl.domain
 
 import longevity.subdomain.KeyVal
 
-case class Email(email: String)
-extends KeyVal[User, Email](User.keys.email)
+case class Email(email: String) extends KeyVal[User, Email]
