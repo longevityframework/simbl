@@ -15,7 +15,7 @@ object Blog extends PType[Blog] {
     val uri = prop[BlogUri]("uri")
   }
   object keys {
-    val uri = key(props.uri)
+    val uri = partitionKey(props.uri)
   }
   object indexes {
   }

@@ -22,7 +22,7 @@ object User extends PType[User] {
     val email = prop[Email]("email")
   }
   object keys {
-    val username = key(props.username)
+    val username = partitionKey(props.username)
     val email = key(props.email)
   }
   object indexes {

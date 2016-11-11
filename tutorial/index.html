@@ -99,6 +99,14 @@
       </p>
 
       <p>
+        You can have as many keys as you like, but only one of the
+        keys - in our case, <code>username</code> - can be a partition
+        key. Partition keys perform better than other keys when you
+        are using a distributed database, since the database can
+        determine the node that holds the data by examining the key.
+      </p>
+      
+      <p>
         The <code>User</code> companion object
         extends <code>PType</code>, which is a type class for
         a <code>Persistent</code>. Every <code>PType</code> defines

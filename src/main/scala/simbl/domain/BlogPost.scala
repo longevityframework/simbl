@@ -25,7 +25,7 @@ object BlogPost extends PType[BlogPost] {
   }
 
   object keys {
-    val uri = key(props.uri)
+    val uri = partitionKey(props.uri)
   }
 
   object indexes {
