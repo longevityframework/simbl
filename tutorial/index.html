@@ -70,12 +70,6 @@
       </p>
 
       <p>
-        The <code>User</code> is a simple case class that extends
-        empty longevity trait <code>Persistent</code>. which we use to mark
-        things we want to persist to the database.
-      </p>
-
-      <p>
         The <code>User</code> case class provides us with the four
         members we find in the UML in the
         <a href="#tutorial/1">previous section</a>, including the
@@ -83,6 +77,12 @@
         and <code>UserProfile</code>. There are also a couple of
         business methods inside: <code>updateProfile</code>
         and <code>deleteProfile</code>.
+      </p>
+
+      <p>
+        In longevity terminology, <code>Users</code> are <i>persistent
+        objects</i> - that is, objects we want to persist in their own
+        table or collection.
       </p>
 
       <p>
@@ -109,7 +109,7 @@
       <p>
         The <code>User</code> companion object
         extends <code>PType</code>, which is a type class for
-        a <code>Persistent</code>. Every <code>PType</code> defines
+        a persistent object. Every <code>PType</code> defines
         its <code>props</code>, <code>keys</code>,
         and <code>indexes</code>, as you see in this example.
       </p>
@@ -121,15 +121,17 @@
 
       <p>
         The <a href="#code/src/main/scala/simbl/domain/UserProfile.scala"
-               class="shortcut">user profile</a> is a simple case class
-               that extends the empty longevity trait <code>Embeddable</code>,
-               which we use to mark things that we want to embed in
-        our persistent objects.
+               class="shortcut">user profile</a> is a simple case class.
+        In longevity, we call the <code>UserProfile</code>
+        a <i>persistent component</i> - a class that we persist, but
+        not in its own table. They only get persisted along with a
+        containing persistent object such as User.
       </p>
 
       <p>
-        The <code>UserProfile</code> has two members that are
-        also <code>Embeddables</code>: <a href="#code/src/main/scala/simbl/domain/Uri.scala"
+        The <code>UserProfile</code> has two members that are also
+        persistent
+        components: <a href="#code/src/main/scala/simbl/domain/Uri.scala"
         class="shortcut"><code>Uri</code></a>
         and <a href="#code/src/main/scala/simbl/domain/Markdown.scala"
         class="shortcut"><code>Markdown</code></a>. These are simple
@@ -138,9 +140,8 @@
         functionality in the future. For instance,
         the <code>Uri</code> constructor might throw some kind of
         validation exception if the provided string is not a valid
-        URI. As you can see, we can freely
-        nest <code>Embeddables</code> within
-        our <code>Persistent</code> classes.
+        URI. As you can see, we can freely nest persistent components
+        within our persistent object classes.
       </p>
     </div>
     
@@ -178,11 +179,12 @@
       <p>
         As you can see in the code, we need to gather up all
         our <code>PTypes</code> into a
-        <code>PTypePool</code>. We also create <code>ETypes</code> for
-        our <code>Embeddables</code>, and gather them into an <code>ETypePool</code>.
-        <code>PTypePool</code> and <code>ETypePool</code> are simple
+        <code>PTypePool</code>. We also create <code>CTypes</code> for
+        our persistent components, and gather them into
+        an <code>CTypePool</code>.
+        <code>PTypePool</code> and <code>CTypePool</code> are simple
         collections of <code>PTypes</code>
-        and <code>ETypes</code>. You can think of them as sets.
+        and <code>CTypes</code>. You can think of them as sets.
       </p>
 
     </div>
@@ -211,7 +213,7 @@
         resource file. Here, you can find configurations for main and
         test databases for both Mongo and Cassandra. If you want to
         experiment with adjusting the persistence strategy to use a
-        real database, you may need to tweak this configuration.
+        real database, you may need to adjust this configuration.
       </p>
       
       <p>

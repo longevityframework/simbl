@@ -1,14 +1,12 @@
 package simbl.domain
 
-import longevity.subdomain.Persistent
 import longevity.subdomain.PType
 
 case class User(
   username: Username,
   email: Email,
   fullname: String,
-  profile: Option[UserProfile])
-extends Persistent {
+  profile: Option[UserProfile]) {
 
   def updateProfile(profile: UserProfile): User = copy(profile = Some(profile))
 
@@ -24,7 +22,5 @@ object User extends PType[User] {
   object keys {
     val username = partitionKey(props.username)
     val email = key(props.email)
-  }
-  object indexes {
   }
 }

@@ -1,6 +1,5 @@
 package simbl.domain
 
-import longevity.subdomain.Persistent
 import longevity.subdomain.PType
 
 case class Blog(
@@ -8,7 +7,6 @@ case class Blog(
   title: String,
   description: Markdown,
   authors: Set[Username])
-extends Persistent
 
 object Blog extends PType[Blog] {
   object props {
@@ -16,7 +14,5 @@ object Blog extends PType[Blog] {
   }
   object keys {
     val uri = partitionKey(props.uri)
-  }
-  object indexes {
   }
 }
