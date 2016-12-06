@@ -1,34 +1,23 @@
 package simbl.domain
 
-import longevity.subdomain.PType
+import longevity.subdomain.annotations.persistent
 import longevity.subdomain.query.Query
 import org.joda.time.DateTime
 
+@persistent(
+  keySet = Set(partitionKey(props.uri)),
+  indexSet = Set(index(props.blog, props.postDate)))
 case class BlogPost(
   uri: BlogPostUri,
   title: String,
   slug: Option[Markdown] = None,
   content: Markdown,
-  labels: Set[String] = Set(),
+  labels: Set[String],
   postDate: DateTime,
   blog: BlogUri,
   authors: Set[Username])
 
-object BlogPost extends PType[BlogPost] {
-
-  object props {
-    val uri = prop[BlogPostUri]("uri")
-    val blog = prop[BlogUri]("blog")
-    val postDate = prop[DateTime]("postDate")
-  }
-
-  object keys {
-    val uri = partitionKey(props.uri)
-  }
-
-  object indexes {
-    val postDate = index(props.blog, props.postDate)
-  }
+object BlogPost {
 
   object queries {
     import com.github.nscala_time.time.Implicits._

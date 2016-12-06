@@ -1,5 +1,5 @@
 package simbl.domain
 
-import longevity.subdomain.KeyVal
+import longevity.subdomain.annotations.keyVal
 
-case class Username(username: String) extends KeyVal[User]
+@keyVal[User] case class Username(username: String)

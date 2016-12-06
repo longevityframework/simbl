@@ -1,18 +1,10 @@
 package simbl.domain
 
-import longevity.subdomain.PType
+import longevity.subdomain.annotations.persistent
 
+@persistent(keySet = Set(partitionKey(props.uri)))
 case class Blog(
   uri: BlogUri,
   title: String,
   description: Markdown,
   authors: Set[Username])
-
-object Blog extends PType[Blog] {
-  object props {
-    val uri = prop[BlogUri]("uri")
-  }
-  object keys {
-    val uri = partitionKey(props.uri)
-  }
-}

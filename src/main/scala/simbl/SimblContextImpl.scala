@@ -15,8 +15,7 @@ import simbl.service.UserServiceImpl
 
 /** default container for all the Simble application components */
 class SimblContextImpl extends SimblContext {
-  private val coreDomain = new SimblSubdomain
-  private val longevityContext = LongevityContext(coreDomain)
+  private val longevityContext = LongevityContext(SimblSubdomain)
   private val repoPool = longevityContext.repoPool
 
   val blogRepo = repoPool[Blog]

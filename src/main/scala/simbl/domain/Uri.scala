@@ -1,3 +1,5 @@
 package simbl.domain
 
-case class Uri(uri: String)
+import longevity.subdomain.annotations.component
+
+@component case class Uri(uri: String)

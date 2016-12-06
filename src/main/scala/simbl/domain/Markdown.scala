@@ -1,3 +1,5 @@
 package simbl.domain
 
-case class Markdown(markdown: String)
+import longevity.subdomain.annotations.component
+
+@component case class Markdown(markdown: String)

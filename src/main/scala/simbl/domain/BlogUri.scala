@@ -1,5 +1,5 @@
 package simbl.domain
 
-import longevity.subdomain.KeyVal
+import longevity.subdomain.annotations.keyVal
 
-case class BlogUri(uri: Uri) extends KeyVal[Blog]
+@keyVal[Blog] case class BlogUri(uri: Uri)

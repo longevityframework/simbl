@@ -111,10 +111,10 @@ extends UserService {
 
   /** converts longevity duplicate key val exception into simbl exception */
   private def handleDuplicateKeyVal(e: DuplicateKeyValException[_], info: UserInfo): Nothing = {
-    e.key match {
-      case User.keys.username =>
+    e.key.prop match {
+      case User.props.username =>
         throw new DuplicateUsernameException(info.username)
-      case User.keys.email =>
+      case User.props.email =>
         throw new DuplicateEmailException(info.email)
     }
   }
