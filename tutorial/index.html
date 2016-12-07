@@ -57,7 +57,7 @@
     </div>
 
     <div>
-      <h2>Building the User</h2>
+      <h2>Building the User Aggregate</h2>
 
       <p>
         The user has four parts: the <code>User</code>,
@@ -82,19 +82,29 @@
       <p>
         In longevity terminology, <code>Users</code> are <i>persistent
         objects</i> - that is, objects we want to persist in their own
-        table or collection.
+        table or collection. We tell longevity that we want to persist
+        them by marking them with the <code>@persistent</code>
+        annotation.
       </p>
 
       <p>
-        The <code>User</code> companion object provides metadata about
-        the <code>User</code>: information that pertains not to an
-        individual user, but to a collection of them. We first specify
-        two properties, <code>User.props.username</code>
-        and <code>User.props.email</code>, that we use to refer to
-        members of <code>User</code> objects. Then we define two
-        keys: <code>User.keys.username</code>
-        and <code>User.keys.email</code>, that specify that these
-        two member are to be unique: no two users should have the same
+        When we annotate <code>User</code> as a persistent object,
+        longevity creates a set of properties for us that we can use
+        to reflect on <code>User</code> fields. It puts these
+        properties in an inner object <code>props</code> in
+        the <code>User</code> companion object. Now we can talk about
+        <code>User</code> fields <code>username</code>
+        and <code>email</code> with
+        properties <code>User.props.username</code>
+        and <code>User.props.email</code>.
+      </p>
+
+      <p>
+        We use <code>keySet</code> parameter on
+        the <code>@persistent</code> annotation to tell longevity
+        about our keys. We define keys on the <code>username</code>
+        and <code>email</code> fields, specifying that these two
+        member are to be unique: no two users should have the same
         username or email.
       </p>
 
@@ -104,14 +114,6 @@
         key. Partition keys perform better than other keys when you
         are using a distributed database, since the database can
         determine the node that holds the data by examining the key.
-      </p>
-      
-      <p>
-        The <code>User</code> companion object
-        extends <code>PType</code>, which is a type class for
-        a persistent object. Every <code>PType</code> defines
-        its <code>props</code>, <code>keys</code>,
-        and <code>indexes</code>, as you see in this example.
       </p>
       
     </div>
@@ -125,7 +127,7 @@
         In longevity, we call the <code>UserProfile</code>
         a <i>persistent component</i> - a class that we persist, but
         not in its own table. They only get persisted along with a
-        containing persistent object such as User.
+        containing persistent object such as <code>User</code>.
       </p>
 
       <p>
@@ -154,12 +156,11 @@
         class="shortcut"><code>Username</code></a> and
         <a href="#code/src/main/scala/simbl/domain/Email.scala"
         class="shortcut"><code>Email</code></a>, which are the key
-        values for our natural keys, <code>User.keys.username</code>
-        and <code>User.keys.email</code>, respectively. Aside from
+        values for the two <code>User</code>. Aside from
         being parts of our user aggregate, we can also embed them in
         other classes, such as 
         <a href="#code/src/main/scala/simbl/domain/BlogPost.scala"
-        class="shortcut"><code>BlogPost</code></a>, (see line 16), to
+        class="shortcut"><code>BlogPost</code></a>, (see line 18), to
         describe a relationship between a blog post and its authors.
       </p>
     </div>
@@ -172,21 +173,9 @@
         them all together into a <code>Subdomain</code> object. We do
         this in
         <a href="#code/src/main/scala/simbl/domain/SimblSubdomain.scala"
-        class="shortcut"><code>SimblSubdomain</code></a> by extending
-        longevity class <code>Subdomain</code>.
+        class="shortcut"><code>SimblSubdomain</code></a> using
+        the <code>@subdomain</code> annotation.
       </p>
-
-      <p>
-        As you can see in the code, we need to gather up all
-        our <code>PTypes</code> into a
-        <code>PTypePool</code>. We also create <code>CTypes</code> for
-        our persistent components, and gather them into
-        an <code>CTypePool</code>.
-        <code>PTypePool</code> and <code>CTypePool</code> are simple
-        collections of <code>PTypes</code>
-        and <code>CTypes</code>. You can think of them as sets.
-      </p>
-
     </div>
 
     <div>
