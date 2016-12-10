@@ -7,7 +7,7 @@ import simbl.api.BlogPostRoute
 import simbl.api.UserRoute
 import simbl.domain.Blog
 import simbl.domain.BlogPost
-import simbl.domain.SimblSubdomain
+import simbl.domain.SimblDomainModel
 import simbl.domain.User
 import simbl.service.BlogServiceImpl
 import simbl.service.BlogPostServiceImpl
@@ -15,7 +15,7 @@ import simbl.service.UserServiceImpl
 
 /** default container for all the Simble application components */
 class SimblContextImpl extends SimblContext {
-  private val longevityContext = LongevityContext(SimblSubdomain)
+  private val longevityContext = LongevityContext(SimblDomainModel)
   private val repoPool = longevityContext.repoPool
 
   val blogRepo = repoPool[Blog]

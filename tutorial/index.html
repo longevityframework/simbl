@@ -30,7 +30,7 @@
     </div>
     
     <div>
-      <h2>Modeling our Subdomain</h2>
+      <h2>Modeling our Domain</h2>
 
       <p>
         We have four types in our domain model that we want to
@@ -166,15 +166,15 @@
     </div>
 
     <div>
-      <h2>Building the Subdomain</h2>
+      <h2>Building the Domain Model</h2>
 
       <p>
         Once all the elements we want to persist have been created, we gather
-        them all together into a <code>Subdomain</code> object. We do
+        them all together into a <code>DomainModel</code> object. We do
         this in
-        <a href="#code/src/main/scala/simbl/domain/SimblSubdomain.scala"
-        class="shortcut"><code>SimblSubdomain</code></a> using
-        the <code>@subdomain</code> annotation.
+        <a href="#code/src/main/scala/simbl/domain/SimblDomainModel.scala"
+        class="shortcut"><code>SimblDomainModel</code></a> using
+        the <code>@domainModel</code> annotation.
       </p>
     </div>
 
@@ -182,12 +182,12 @@
       <h2>Building the Longevity Context</h2>
 
       <p>
-        Once we have your subdomain in place, we are ready to build
+        Once we have your domain model in place, we are ready to build
         our <code>LongevityContext</code>, as we do on line 20 of 
         <a href="#code/src/main/scala/simbl/SimblContextImpl.scala"
         class="shortcut"><code>SimblContextImpl.scala</code></a>. The
         longevity context provides a variety of tools that are
-        tailored to your subdomain. The most important of these is
+        tailored to your model. The most important of these is
         the <code>RepoPool</code>, which contains repositories for
         your persistent objects. You can use these repositories to do
         standard CRUD operations (create/retrieve/update/delete), as
@@ -540,7 +540,7 @@
 
       <ul>
         <li>
-          Add a <code>Comment</code> aggregate to the subdomain.
+          Add a <code>Comment</code> aggregate to the domain model.
         </li>
         <li>
           Put in service methods and routes for <code>BlogPost</code>

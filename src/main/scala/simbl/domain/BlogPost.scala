@@ -1,7 +1,7 @@
 package simbl.domain
 
-import longevity.subdomain.annotations.persistent
-import longevity.subdomain.query.Query
+import longevity.model.annotations.persistent
+import longevity.model.query.Query
 import org.joda.time.DateTime
 
 @persistent(
