@@ -3,7 +3,7 @@ package simbl.domain
 import longevity.model.annotations.persistent
 
 @persistent(keySet = Set(
-  partitionKey(props.username),
+  primaryKey(props.username),
   key(props.email)))
 case class User(
   username: Username,

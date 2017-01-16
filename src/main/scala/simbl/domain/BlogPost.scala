@@ -5,7 +5,7 @@ import longevity.model.query.Query
 import org.joda.time.DateTime
 
 @persistent(
-  keySet = Set(partitionKey(props.uri)),
+  keySet = Set(primaryKey(props.uri)),
   indexSet = Set(index(props.blog, props.postDate)))
 case class BlogPost(
   uri: BlogPostUri,

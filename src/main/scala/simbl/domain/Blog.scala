@@ -2,7 +2,7 @@ package simbl.domain
 
 import longevity.model.annotations.persistent
 
-@persistent(keySet = Set(partitionKey(props.uri)))
+@persistent(keySet = Set(primaryKey(props.uri)))
 case class Blog(
   uri: BlogUri,
   title: String,

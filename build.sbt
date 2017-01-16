@@ -23,9 +23,9 @@ scalacOptions ++= Seq(
 
 libraryDependencies ++= {
   val akkaHttpVersion = "10.0.0"
-  val longevityVersion = "0.19.0"
+  val longevityVersion = "0.20.0"
   val scalaTestVersion = "3.0.1"
-  val scalaTimeVersion = "2.14.0"
+  val scalaTimeVersion = "2.16.0"
   val slf4jSimpleVersion = "1.7.21"
   Seq(
     "org.slf4j"              %  "slf4j-simple"             % slf4jSimpleVersion,
@@ -34,7 +34,8 @@ libraryDependencies ++= {
     "de.heikoseeberger"      %% "akka-http-json4s"         % "1.11.0",
     "org.longevityframework" %% "longevity"                % longevityVersion,
     "org.longevityframework" %% "longevity-cassandra-deps" % longevityVersion,
-    "org.longevityframework" %% "longevity-mongo-deps"     % longevityVersion,
+    "org.longevityframework" %% "longevity-mongodb-deps"   % longevityVersion,
+    "org.longevityframework" %% "longevity-sqlite-deps"    % longevityVersion,
     "org.scalatest"          %% "scalatest"                % scalaTestVersion % Test
   )
 }

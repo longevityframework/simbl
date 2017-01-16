@@ -110,8 +110,8 @@
 
       <p>
         You can have as many keys as you like, but only one of the
-        keys - in our case, <code>username</code> - can be a partition
-        key. Partition keys perform better than other keys when you
+        keys - in our case, <code>username</code> - can be a primary
+        key. Primary keys perform better than other keys when you
         are using a distributed database, since the database can
         determine the node that holds the data by examining the key.
       </p>
@@ -200,7 +200,7 @@
         context. Typically, the configuration is drawn from
         the <a href="#code/src/main/resources/application.conf"><code>application.conf</code></a>
         resource file. Here, you can find configurations for main and
-        test databases for both Mongo and Cassandra. If you want to
+        test databases for the various back ends. If you want to
         experiment with adjusting the persistence strategy to use a
         real database, you may need to adjust this configuration.
       </p>
@@ -208,10 +208,13 @@
       <p>
         You also need to specify the back end in configuration
         property <code>longevity.backEnd</code>. Your choices are
-        currently <code>InMem</code>, <code>Mongo</code>,
-        and <code>Cassandra</code>. We use <code>InMem</code> out of
-        the box, so that this tutorial will work even if you don't
-        have a MongoDB or Cassandra database set up for use.
+        currently <code>Cassandra</code>, <code>InMem</code>,
+        <code>Mongo</code>, and <code>SQLite</code>. We
+        use <code>InMem</code> out of the box. If you want to try
+        Cassandra or MongoDB, you will need to set up a database
+        system to connect to. The SQLite back end will work without
+        any extra setup, as all you need to run SQLite is the right
+        jar on your classpath.
       </p>
 
     </div>
