@@ -4,3 +4,4 @@ target
 /.sbtserver
 /project/sbt-ui.sbt
 /TAGS
+/simbl_main.db
