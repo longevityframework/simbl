@@ -24,7 +24,7 @@ scalacOptions ++= Seq(
 libraryDependencies ++= {
   val akkaHttpVersion       = "10.0.3"
   val akkaHttpJson4sVersion = "1.12.0"
-  val longevityVersion      = "0.21.0"
+  val longevityVersion      = "0.22.0"
   val scalaTestVersion      = "3.0.1"
   val scalaTimeVersion      = "2.16.0"
   val slf4jSimpleVersion    = "1.7.22"
@@ -40,6 +40,12 @@ libraryDependencies ++= {
     "org.scalatest"          %% "scalatest"                % scalaTestVersion % Test
   )
 }
+
+// libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.4.17"
+// libraryDependencies += "co.fs2" %% "fs2-core" % "0.9.4"
+// libraryDependencies += "org.typelevel" %% "cats" % "0.9.0"
+// libraryDependencies += "io.iteratee" %% "iteratee-core" % "0.10.0"
+// libraryDependencies += "com.typesafe.play" %% "play-iteratees" % "2.6.1"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 

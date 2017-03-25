@@ -32,7 +32,7 @@ extends UserService {
     def stateToInfo(state: PState[User]) = UserInfo(state.get)
     def usersToUserInfos(users: Seq[PState[User]]) = users.map(stateToInfo)
     import User.queryDsl._
-    userRepo.retrieveByQuery(filterAll).map(usersToUserInfos)
+    userRepo.queryToFutureVec(filterAll).map(usersToUserInfos)
   }
 
   def retrieveUser(username: String): Future[Option[UserInfo]] = {
