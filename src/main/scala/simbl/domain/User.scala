@@ -2,9 +2,7 @@ package simbl.domain
 
 import longevity.model.annotations.persistent
 
-@persistent(keySet = Set(
-  primaryKey(props.username),
-  key(props.email)))
+@persistent[SimblDomainModel]
 case class User(
   username: Username,
   email: Email,
@@ -15,4 +13,9 @@ case class User(
 
   def deleteProfile: User = copy(profile = None)
 
+}
+
+object User {
+  implicit val usernameKey = primaryKey(props.username)
+  implicit val emailKey = key(props.email)
 }

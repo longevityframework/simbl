@@ -7,24 +7,25 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import simbl.api.ProfileInfo
 import simbl.api.UserInfo
+import simbl.domain.SimblDomainModel
 import simbl.domain.User
 import simbl.domain.Username
 
 /** default implementation of service to back the [[UserRoute user routes]] */
 class UserServiceImpl(
-  private val userRepo: Repo[User])(
+  private val repo: Repo[SimblDomainModel])(
   implicit context: ExecutionContext)
 extends UserService {
 
   def createUser(info: UserInfo): Future[UserInfo] = {
     {
       for {
-        created <- userRepo.create(info.toUser)
+        created <- repo.create(info.toUser)
       } yield {
         UserInfo(created.get)
       }
     } recover {
-      case e: DuplicateKeyValException[_] => handleDuplicateKeyVal(e, info)
+      case e: DuplicateKeyValException[_, _] => handleDuplicateKeyVal(e, info)
     }
   }
 
@@ -32,12 +33,12 @@ extends UserService {
     def stateToInfo(state: PState[User]) = UserInfo(state.get)
     def usersToUserInfos(users: Seq[PState[User]]) = users.map(stateToInfo)
     import User.queryDsl._
-    userRepo.queryToFutureVec(filterAll).map(usersToUserInfos)
+    repo.queryToFutureVec(filterAll).map(usersToUserInfos)
   }
 
   def retrieveUser(username: String): Future[Option[UserInfo]] = {
     for {
-      retrieved <- userRepo.retrieve(Username(username))
+      retrieved <- repo.retrieve[User](Username(username))
     } yield {
       def stateToInfo(state: PState[User]) = UserInfo(state.get)
       retrieved.map(stateToInfo)
@@ -47,14 +48,14 @@ extends UserService {
   def updateUser(username: String, info: UserInfo): Future[Option[UserInfo]] = {
     {
       for {
-        retrieved <- userRepo.retrieveOne(Username(username))
+        retrieved <- repo.retrieveOne[User](Username(username))
         modified = retrieved.map(info.mapUser)
-        updated <- userRepo.update(modified)
+        updated <- repo.update(modified)
       } yield {
         Some(UserInfo(updated.get))
       }
     } recover {
-      case e: DuplicateKeyValException[_] => handleDuplicateKeyVal(e, info)
+      case e: DuplicateKeyValException[_, _] => handleDuplicateKeyVal(e, info)
       case e: NoSuchElementException => None
     }
   }
@@ -62,8 +63,8 @@ extends UserService {
   def deleteUser(username: String): Future[Option[UserInfo]] = {
     {
       for {
-        retrieved <- userRepo.retrieveOne(Username(username))
-        deleted <- userRepo.delete(retrieved)
+        retrieved <- repo.retrieveOne[User](Username(username))
+        deleted <- repo.delete(retrieved)
       } yield {
         Some(UserInfo(deleted.get))
       }
@@ -74,7 +75,7 @@ extends UserService {
 
   def retrieveProfile(username: String): Future[Option[ProfileInfo]] = {
     for {
-      retrieved <- userRepo.retrieve(Username(username))
+      retrieved <- repo.retrieve[User](Username(username))
     } yield {
       def stateToInfo(state: PState[User]) = state.get.profile.map(ProfileInfo(_))
       retrieved.flatMap(stateToInfo)
@@ -84,9 +85,9 @@ extends UserService {
   def updateProfile(username: String, profile: ProfileInfo): Future[Option[ProfileInfo]] = {
     {
       for {
-        retrieved <- userRepo.retrieveOne(Username(username))
+        retrieved <- repo.retrieveOne[User](Username(username))
         modified = retrieved.map(_.updateProfile(profile.toProfile))
-        updated <- userRepo.update(modified)
+        updated <- repo.update(modified)
       } yield {
         updated.get.profile.map(ProfileInfo(_))
       }
@@ -98,9 +99,9 @@ extends UserService {
   def deleteProfile(username: String): Future[Option[ProfileInfo]] = {
     {
       for {
-        retrieved <- userRepo.retrieveOne(Username(username))
+        retrieved <- repo.retrieveOne[User](Username(username))
         modified = retrieved.map(_.deleteProfile)
-        updated <- userRepo.update(modified)
+        updated <- repo.update(modified)
       } yield {
         retrieved.get.profile.map(ProfileInfo(_))
       }
@@ -110,7 +111,7 @@ extends UserService {
   }
 
   /** converts longevity duplicate key val exception into simbl exception */
-  private def handleDuplicateKeyVal(e: DuplicateKeyValException[_], info: UserInfo): Nothing = {
+  private def handleDuplicateKeyVal(e: DuplicateKeyValException[_, _], info: UserInfo): Nothing = {
     e.key.prop match {
       case User.props.username =>
         throw new DuplicateUsernameException(info.username)

@@ -4,9 +4,7 @@ import longevity.model.annotations.persistent
 import longevity.model.query.Query
 import org.joda.time.DateTime
 
-@persistent(
-  keySet = Set(primaryKey(props.uri)),
-  indexSet = Set(index(props.blog, props.postDate)))
+@persistent[SimblDomainModel]
 case class BlogPost(
   uri: BlogPostUri,
   title: String,
@@ -18,6 +16,10 @@ case class BlogPost(
   authors: Set[Username])
 
 object BlogPost {
+
+  implicit val uriKey = primaryKey(props.uri)
+
+  override val indexSet = Set(index(props.blog, props.postDate))
 
   object queries {
     import com.github.nscala_time.time.Implicits._

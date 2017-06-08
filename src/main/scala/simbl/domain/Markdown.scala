@@ -2,4 +2,4 @@ package simbl.domain
 
 import longevity.model.annotations.component
 
-@component case class Markdown(markdown: String)
+@component[SimblDomainModel] case class Markdown(markdown: String)

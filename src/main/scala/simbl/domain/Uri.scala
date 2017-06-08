@@ -2,4 +2,4 @@ package simbl.domain
 
 import longevity.model.annotations.component
 
-@component case class Uri(uri: String)
+@component[SimblDomainModel] case class Uri(uri: String)

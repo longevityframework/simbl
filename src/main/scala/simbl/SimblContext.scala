@@ -5,9 +5,7 @@ import longevity.persistence.Repo
 import simbl.api.BlogRoute
 import simbl.api.BlogPostRoute
 import simbl.api.UserRoute
-import simbl.domain.Blog
-import simbl.domain.BlogPost
-import simbl.domain.User
+import simbl.domain.SimblDomainModel
 import simbl.service.BlogService
 import simbl.service.BlogPostService
 import simbl.service.UserService
@@ -16,9 +14,7 @@ import simbl.service.UserService
 trait SimblContext {
   val actorSystem: ActorSystem
 
-  val blogRepo: Repo[Blog]
-  val blogPostRepo: Repo[BlogPost]
-  val userRepo: Repo[User]
+  val repo: Repo[SimblDomainModel]
 
   val blogPostService: BlogPostService
   val blogService: BlogService
