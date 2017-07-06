@@ -2,6 +2,7 @@ package simbl
 
 import akka.actor.ActorSystem
 import longevity.persistence.Repo
+import scala.concurrent.Future
 import simbl.api.BlogRoute
 import simbl.api.BlogPostRoute
 import simbl.api.UserRoute
@@ -14,7 +15,7 @@ import simbl.service.UserService
 trait SimblContext {
   val actorSystem: ActorSystem
 
-  val repo: Repo[SimblDomainModel]
+  val repo: Repo[Future, SimblDomainModel]
 
   val blogPostService: BlogPostService
   val blogService: BlogService

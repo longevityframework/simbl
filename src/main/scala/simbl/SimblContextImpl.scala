@@ -2,6 +2,8 @@ package simbl
 
 import akka.actor.ActorSystem
 import longevity.context.LongevityContext
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import simbl.api.BlogRoute
 import simbl.api.BlogPostRoute
 import simbl.api.UserRoute
@@ -12,7 +14,7 @@ import simbl.service.UserServiceImpl
 
 /** default container for all the Simble application components */
 class SimblContextImpl extends SimblContext {
-  private val longevityContext = LongevityContext[SimblDomainModel]()
+  private val longevityContext = LongevityContext[Future, SimblDomainModel]()
 
   val repo = longevityContext.repo
 

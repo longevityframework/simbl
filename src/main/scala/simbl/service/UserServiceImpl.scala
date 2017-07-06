@@ -13,7 +13,7 @@ import simbl.domain.Username
 
 /** default implementation of service to back the [[UserRoute user routes]] */
 class UserServiceImpl(
-  private val repo: Repo[SimblDomainModel])(
+  private val repo: Repo[Future, SimblDomainModel])(
   implicit context: ExecutionContext)
 extends UserService {
 
@@ -33,7 +33,7 @@ extends UserService {
     def stateToInfo(state: PState[User]) = UserInfo(state.get)
     def usersToUserInfos(users: Seq[PState[User]]) = users.map(stateToInfo)
     import User.queryDsl._
-    repo.queryToFutureVec(filterAll).map(usersToUserInfos)
+    repo.queryToVector(filterAll).map(usersToUserInfos)
   }
 
   def retrieveUser(username: String): Future[Option[UserInfo]] = {
